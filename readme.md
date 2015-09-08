@@ -62,16 +62,15 @@
     监控请求：{"action":"monitor","rule_name":"o2o","app_name":"test"}   
     响应：{"code":0,"message":"ok","data":{"counter":3,"node_offset":1}}
 
-### 编译运行
-1. 编译
+### 编译
     $make 
     $make install 
     make install会将部署所需的文件拷贝到deploy目录下 。
 
-2. 创建数据库
+### 创建数据库
     $mysql < deploy/counter.sql
 
-3. 启动服务器
+### 启动服务器
     $deploy/server_ctl.sh start id_server 1
     修改配置后使用控制脚本server_ctl.sh控制系统的启动和关闭。
 
