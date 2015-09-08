@@ -14,10 +14,10 @@
     <log prefix="id_server" level="5" />
 
     服务端口配置
-    <listen host="10.8.64.23" port="1200" />
+    <listen host="0.0.0.0" port="1200" />
 
     数据库配置
-    <database thread_count="4" host="10.8.72.11" port="3306" user="id_counter" password="ILtuVb4EN" dbname="id_counter" /> 
+    <database thread_count="4" host="127.0.0.1" port="3306" user="root" password="" dbname="id_counter" /> 
 
     ID规则配置，规则内容由lua脚本定义，修改配置后reload即可。 
     step表示ID自增的步长，也可以理解为同时运行的服务器数量 。 
