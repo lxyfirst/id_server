@@ -5,16 +5,18 @@
     客户端可以使用集群中任意选择一个服务器节点发起请求，失败则重试下一个。
 
 ### 系统实现 
-    使用c++实现，依赖mysqlclient库、lua库和gperftools库，采用多线程异步模型，主线程处理请求，数据库线程组负责写数据库。
+    使用c++实现，运行在linux下,依赖mysqlclient库、lua库和gperftools库，
+    采用多线程异步模型，主线程处理请求，数据库线程组负责异步写数据库。
+   
 
 ### 配置项 
-#### 日志配置 
+    日志配置 
     <log prefix="id_server" level="5" />
 
-#### 服务端口配置
+    服务端口配置
     <listen host="10.8.64.23" port="1200" />
 
-#### 数据库配置
+    数据库配置
     <database thread_count="4" host="10.8.72.11" port="3306" user="id_counter" password="ILtuVb4EN" dbname="id_counter" /> 
 
     ID规则配置，规则内容由lua脚本定义，修改配置后reload即可。 
@@ -25,11 +27,11 @@
     </rules>
 
 ### ID规则定义 
-    具体规则有lua脚本定义，需要实现4个函数
+    具体规则有lua脚本定义，修改脚本后需要reload生效，需要实现4个函数
     min_counter :   计数器最小值
     max_counter :   计数器最大值
     reset_seconds : 计数器重置周期
-    create_id : 根据计数器和时间参数创建ID，当请求中包含自定义格式时，优先使用自定义格式，不再使用本函数。
+    create_id : 根据计数器、自定义参数和时间参数创建ID。
     参见：
     function min_counter()
         return 0
@@ -54,8 +56,11 @@
     salt :  自定义参数 ，可选项 ， 
   
   
-    创建ID请求:  {"action":"get","rule_name":"o2o","app_name":"test"}  响应：{"code":0,"message":"success","data":"505140001"}
-    监控请求：{"action":"monitor","rule_name":"o2o","app_name":"test"}   响应：{"code":0,"message":"ok","data":{"counter":3,"node_offset":1}}
+    创建ID请求:  {"action":"get","rule_name":"o2o","app_name":"test"}  
+    响应：{"code":0,"message":"success","data":"505140001"}
+    
+    监控请求：{"action":"monitor","rule_name":"o2o","app_name":"test"}   
+    响应：{"code":0,"message":"ok","data":{"counter":3,"node_offset":1}}
 
 ### 系统控制脚本 
     server_ctl.sh star|stop|reload id_server {server_id}
