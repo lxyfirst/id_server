@@ -1,0 +1,12 @@
+<root>
+    <log prefix="id_server.1" level="5" />
+
+    <listen host="0.0.0.0" port="1200" />
+    
+    <database thread_count="2" host="127.0.0.1" port="3306" user="root" password="" dbname="id_counter" /> 
+
+    <rules step="2"  offset="0" >
+        <rule name="task" lua_file="task.lua" />
+    </rules>
+
+</root>
