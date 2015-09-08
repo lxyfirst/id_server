@@ -75,7 +75,7 @@
     修改配置后使用控制脚本server_ctl.sh控制系统的启动和关闭。
 
     系统控制脚本用法 ,可根据需要修改
-    server_ctl.sh star|stop|reload id_server {server_id}
+    server_ctl.sh start|stop|reload id_server {server_id}
     载入的配置文件为 id_server_{server_id}.xml
     修改配置后reload即可，为保证数据安全，只支持规则列表和日志的reload，其他配置修改后需要重启。
 
