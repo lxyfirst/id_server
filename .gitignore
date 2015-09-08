@@ -7,3 +7,4 @@
 *.tgz
 *.log
 core.*
+deploy

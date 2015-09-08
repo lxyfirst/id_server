@@ -62,7 +62,21 @@
     监控请求：{"action":"monitor","rule_name":"o2o","app_name":"test"}   
     响应：{"code":0,"message":"ok","data":{"counter":3,"node_offset":1}}
 
-### 系统控制脚本 
+### 编译运行
+1. 编译
+    $make 
+    $make install 
+    make install会将部署所需的文件拷贝到deploy目录下 。
+
+2. 创建数据库
+    $mysql < deploy/counter.sql
+
+3. 启动服务器
+    $deploy/server_ctl.sh start id_server 1
+    修改配置后使用控制脚本server_ctl.sh控制系统的启动和关闭。
+
+    系统控制脚本用法 ,可根据需要修改
     server_ctl.sh star|stop|reload id_server {server_id}
+    载入的配置文件为 id_server_{server_id}.xml
     修改配置后reload即可，为保证数据安全，只支持规则列表和日志的reload，其他配置修改后需要重启。
 
