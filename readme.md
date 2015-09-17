@@ -17,7 +17,8 @@
     <listen host="0.0.0.0" port="1200" />
 
     数据库配置
-    <database thread_count="4" host="127.0.0.1" port="3306" user="root" password="" dbname="id_counter" /> 
+    <database thread_count="4" host="127.0.0.1" port="3306" 
+        user="root" password="" dbname="id_counter" /> 
 
     ID规则配置，规则内容由lua脚本定义，修改配置后reload即可。 
     step表示ID自增的步长，也可以理解为同时运行的服务器数量 。 
@@ -54,6 +55,7 @@
     rule_name: 规则名字， 由服务端定义
     app_name : 应用名或命名空间 ， 客户端自定义，rule_name和app_name一起决定生成ID的唯一性
     salt :  自定义参数 ，可选项 ， 
+    seq : 自定义参数，可选项，原样返回
   
   
     创建ID请求:  {"action":"get","rule_name":"o2o","app_name":"test"}  
