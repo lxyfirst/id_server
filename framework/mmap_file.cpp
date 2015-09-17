@@ -132,35 +132,35 @@ int mmap_append_file::write(const char* data,int size)
 
 mmap_file::~mmap_file()
 {
-	if(m_file_addr)
-	{
-		munmap(m_file_addr,m_size) ;
-	}
+    if(m_file_addr)
+    {
+        munmap(m_file_addr,m_size) ;
+    }
 }
 
 int mmap_file::load_file(const char* file_name)
 {
-	int fd = open(file_name,O_RDWR,0) ;
-	if(fd < 1 ) return -2 ;
-	struct stat st = {0};
-	fstat(fd, &st) ;
-	if(st.st_size <1)
-	{
-		close(fd) ;
-		return -1 ;
-	}
+    int fd = open(file_name,O_RDWR,0) ;
+    if(fd < 1 ) return -2 ;
+    struct stat st = {0};
+    fstat(fd, &st) ;
+    if(st.st_size <1)
+    {
+        close(fd) ;
+        return -1 ;
+    }
 
 
-	void* file_addr = mmap(NULL,st.st_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0) ;
-	close(fd) ;
+    void* file_addr = mmap(NULL,st.st_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0) ;
+    close(fd) ;
 
-	if(file_addr == MAP_FAILED ) return -1 ;
+    if(file_addr == MAP_FAILED ) return -1 ;
 
-	m_file_addr = file_addr ;
-	m_size = st.st_size ;
-	m_time = st.st_mtime ;
+    m_file_addr = file_addr ;
+    m_size = st.st_size ;
+    m_time = st.st_mtime ;
 
-	return 0 ;
+    return 0 ;
 }
 
 }

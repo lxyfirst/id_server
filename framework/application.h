@@ -163,7 +163,7 @@ private:
 }
 
 #define DECLARE_APPLICATION_INSTANCE(app_type)   \
-	app_type& get_app() ;
+    app_type& get_app() ;
 #define IMPLEMENT_APPLICATION_INSTANCE(app_type) \
     app_type& get_app(){ static app_type app ; return app ; }
 

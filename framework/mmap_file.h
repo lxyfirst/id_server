@@ -60,19 +60,19 @@ private:
 class mmap_file
 {
 public:
-	mmap_file():m_file_addr(NULL),m_size(0) { } ;
-	~mmap_file() ;
+    mmap_file():m_file_addr(NULL),m_size(0) { } ;
+    ~mmap_file() ;
 
-	int load_file(const char* filename) ;
+    int load_file(const char* filename) ;
 
-	int file_size() const { return m_size ; } ;
-	int file_time() const { return m_time ; } ;
-	void* file_data() { return m_file_addr ; } ;
+    int file_size() const { return m_size ; } ;
+    int file_time() const { return m_time ; } ;
+    void* file_data() { return m_file_addr ; } ;
 
 private:
-	void* m_file_addr ;
-	int m_size ;
-	int m_time ;
+    void* m_file_addr ;
+    int m_size ;
+    int m_time ;
 };
 
 }

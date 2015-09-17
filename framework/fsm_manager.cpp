@@ -66,7 +66,7 @@ void fsm_manager::destroy_fsm(int fsm_id)
     fsm_container::iterator it = m_container.find(fsm_id) ;
     if(it != m_container.end() )
     {
-    	base_fsm* fsm = it->second ;
+        base_fsm* fsm = it->second ;
         m_container.erase(it) ;
         free_fsm(fsm) ;
     }

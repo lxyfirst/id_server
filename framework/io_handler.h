@@ -12,16 +12,16 @@
 namespace framework
 {
 
-	enum io_error_type
-	{
-		ERROR_TYPE_NONE = 0 ,
-		ERROR_TYPE_SYSTEM = 1 ,
-		ERROR_TYPE_MEMORY = 2 ,
-		ERROR_TYPE_REQUEST = 3 ,
-		ERROR_TYPE_TIMEOUT = 4 ,
-		ERROR_TYPE_PEER_CLOSE = 5 ,
-		ERROR_TYPE_ACTIVE_CLOSE = 6 ,
-	};
+    enum io_error_type
+    {
+        ERROR_TYPE_NONE = 0 ,
+        ERROR_TYPE_SYSTEM = 1 ,
+        ERROR_TYPE_MEMORY = 2 ,
+        ERROR_TYPE_REQUEST = 3 ,
+        ERROR_TYPE_TIMEOUT = 4 ,
+        ERROR_TYPE_PEER_CLOSE = 5 ,
+        ERROR_TYPE_ACTIVE_CLOSE = 6 ,
+    };
 
 
 /*

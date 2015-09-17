@@ -14,21 +14,21 @@ using framework::sa_in_t ;
 class UdpHandler: public framework::udp_data_handler
 {
 public:
-	UdpHandler();
-	virtual ~UdpHandler();
+    UdpHandler();
+    virtual ~UdpHandler();
 
-	int process_packet(const framework::udp_packet* p);
+    int process_packet(const framework::udp_packet* p);
 
-	int send_response(const sa_in_t& to_addr,int code,const char* message,const char* data="");
+    int send_response(const sa_in_t& to_addr,int code,const char* message,const char* seq="",const char* data="");
 protected:
-	/*
-	 * @brief process create id request
-	 */
-	int process_action_create(const string& rule_name,const string& app_name,const string& salt,const sa_in_t& from_addr);
-	/*
-	 * @brief process monitor request
-	 */
-	int process_action_monitor(const string& rule_name,const string& app_name,const sa_in_t& from_addr);
+    /*
+     * @brief process create id request
+     */
+    int process_action_create(const string& rule_name,const string& app_name,const string& seq,const string& salt,const sa_in_t& from_addr);
+    /*
+     * @brief process monitor request
+     */
+    int process_action_monitor(const string& rule_name,const string& app_name,const string& seq,const sa_in_t& from_addr);
 
 };
 

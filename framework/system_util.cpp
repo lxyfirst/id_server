@@ -112,7 +112,7 @@ int daemon_init(int nochdir,int noclose)
     umask(0) ;
     // Ensure future opens won't allocate controlling TTYs
     struct sigaction sa ;
-	memset(&sa, 0, sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
     sa.sa_handler = SIG_IGN; 
     sigemptyset(&sa.sa_mask); 
     if (sigaction(SIGHUP, &sa, NULL) < 0) return -1 ;

@@ -18,29 +18,29 @@ int load_counter_data(CounterManager& counter_manager,int node_offset,const Thre
 class DataThreadManager
 {
 public:
-	typedef std::vector<DataThread*> ThreadContainer ;
-	typedef std::vector<framework::pipe_handler*> HandlerContainer ;
+    typedef std::vector<DataThread*> ThreadContainer ;
+    typedef std::vector<framework::pipe_handler*> HandlerContainer ;
 public:
-	DataThreadManager();
-	virtual ~DataThreadManager();
+    DataThreadManager();
+    virtual ~DataThreadManager();
 
-	int init(int thread_count,const ThreadConfig& thread_config,framework::log_thread& logger) ;
+    int init(int thread_count,const ThreadConfig& thread_config,framework::log_thread& logger) ;
 
-	void fini() ;
+    void fini() ;
 
-	int async_update(const CounterData& data);
+    int async_update(const CounterData& data);
 
-	void on_pipe_message(const framework::packet_info* msg);
+    void on_pipe_message(const framework::packet_info* msg);
 
-	void on_sql_update_response(const framework::packet_info* msg) ;
+    void on_sql_update_response(const framework::packet_info* msg) ;
 
 private:
-	DataThread* get_thread_by_key(int32_t key)
+    DataThread* get_thread_by_key(int32_t key)
     {
         return m_thread_list[key % m_thread_list.size()] ;
     };
 
-	DataThread* get_thread_by_index(int index)
+    DataThread* get_thread_by_index(int index)
     {
         if(index < 0 || index >= m_thread_list.size()) return NULL ;
         return m_thread_list[index] ;

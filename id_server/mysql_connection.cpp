@@ -156,26 +156,26 @@ bool have_escape_char(const char* data,int size)
 int MysqlConnection::init(const char* host,const char* user,const char* password,int port)
 {
     mysql_init(&m_mysql) ;
-	int timeout = 5 ;
-	mysql_options(&m_mysql,MYSQL_OPT_CONNECT_TIMEOUT,(const char*)&timeout) ;
-	mysql_options(&m_mysql,MYSQL_OPT_READ_TIMEOUT,(const char*)&timeout) ;
-	mysql_options(&m_mysql,MYSQL_OPT_WRITE_TIMEOUT,(const char*)&timeout) ;
+    int timeout = 5 ;
+    mysql_options(&m_mysql,MYSQL_OPT_CONNECT_TIMEOUT,(const char*)&timeout) ;
+    mysql_options(&m_mysql,MYSQL_OPT_READ_TIMEOUT,(const char*)&timeout) ;
+    mysql_options(&m_mysql,MYSQL_OPT_WRITE_TIMEOUT,(const char*)&timeout) ;
 
-	MYSQL* mysql = NULL;
-	if(strchr(host,'/') == NULL )
-	{
-		mysql = mysql_real_connect(&m_mysql,host,
-				user,password,NULL,port,NULL,CLIENT_FOUND_ROWS ) ;
-	}
-	else
-	{
-		mysql = mysql_real_connect(&m_mysql,NULL,
-				user,password,NULL,0,host,CLIENT_FOUND_ROWS ) ;
-	}
+    MYSQL* mysql = NULL;
+    if(strchr(host,'/') == NULL )
+    {
+        mysql = mysql_real_connect(&m_mysql,host,
+                user,password,NULL,port,NULL,CLIENT_FOUND_ROWS ) ;
+    }
+    else
+    {
+        mysql = mysql_real_connect(&m_mysql,NULL,
+                user,password,NULL,0,host,CLIENT_FOUND_ROWS ) ;
+    }
 
-	m_connected = 1 ;
+    m_connected = 1 ;
 
-	return mysql ? 0 : -1 ;
+    return mysql ? 0 : -1 ;
 }
 
 
@@ -183,10 +183,10 @@ void MysqlConnection::fini()
 {
     if(m_connected)
     {
-    	free_result() ;
-    	mysql_close(&m_mysql) ;
-    	mysql_thread_end() ;
-    	m_connected = 0 ;
+        free_result() ;
+        mysql_close(&m_mysql) ;
+        mysql_thread_end() ;
+        m_connected = 0 ;
     }
 
 }
@@ -206,17 +206,17 @@ int MysqlConnection::exec_format(const char* fmt,...)
 int MysqlConnection::exec(const char* sql)
 {
     if(m_connected == 0 ) return -1 ;
-	if(mysql_query(&m_mysql,sql) != 0 ) return -1 ;
+    if(mysql_query(&m_mysql,sql) != 0 ) return -1 ;
 
-	MYSQL_RES* result = mysql_store_result(&m_mysql);
-	if(result == NULL && (mysql_field_count(&m_mysql) != 0) )
-	{
-		return -1 ;
-	}
+    MYSQL_RES* result = mysql_store_result(&m_mysql);
+    if(result == NULL && (mysql_field_count(&m_mysql) != 0) )
+    {
+        return -1 ;
+    }
 
-	if(m_result != NULL ) mysql_free_result(m_result) ;
-	m_result = result ;
-	return 0 ;
+    if(m_result != NULL ) mysql_free_result(m_result) ;
+    m_result = result ;
+    return 0 ;
 
 
 }

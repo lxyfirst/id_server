@@ -65,10 +65,10 @@ int hex2bin(unsigned char* bin,const char* hex,int size)
 
 int base64_encode(unsigned char* dst,const unsigned char* src,int src_size)
 {
-	static char basis[] ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	unsigned char* dst_base = dst ;
-	while(src_size > 2)
-	{
+    static char basis[] ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    unsigned char* dst_base = dst ;
+    while(src_size > 2)
+    {
         *dst++ = basis[(src[0] >> 2) & 0x3f];
         *dst++ = basis[((src[0] & 3) << 4) | (src[1] >> 4)];
         *dst++ = basis[((src[1] & 0x0f) << 2) | (src[2] >> 6)];
@@ -76,10 +76,10 @@ int base64_encode(unsigned char* dst,const unsigned char* src,int src_size)
 
         src += 3;
         src_size -= 3;
-	}
+    }
 
-	if(src_size)
-	{
+    if(src_size)
+    {
         *dst++ = basis[(src[0] >> 2) & 0x3f];
 
         if (src_size == 1)
@@ -95,9 +95,9 @@ int base64_encode(unsigned char* dst,const unsigned char* src,int src_size)
         }
 
         *dst++ = '=';
-	}
+    }
 
-	return dst - dst_base ;
+    return dst - dst_base ;
 
 }
 
@@ -217,10 +217,10 @@ int split(string_vector& dst,const char* src,int size,char sep)
 
 std::string& int2str(std::string& str,long int value)
 {
-	char buf[64] = {0} ;
-	snprintf(buf,sizeof(buf),"%ld",value);
-	str.assign(buf) ;
-	return str ;
+    char buf[64] = {0} ;
+    snprintf(buf,sizeof(buf),"%ld",value);
+    str.assign(buf) ;
+    return str ;
 }
 
 
@@ -455,10 +455,10 @@ void md5_final(unsigned char result[16], md5_context *ctx)
 void md5(std::string& digest,const void *data, int size)
 {
     unsigned char result[16] ;
-	md5_context ctx ;
-	md5_init(&ctx) ;
-	md5_update(&ctx,data,size) ;
-	md5_final(result,&ctx) ;
+    md5_context ctx ;
+    md5_init(&ctx) ;
+    md5_update(&ctx,data,size) ;
+    md5_final(result,&ctx) ;
     char hex_result[40] = {0} ;
     bin2hex(hex_result,result,sizeof(result)) ;   
     digest.assign(hex_result) ;

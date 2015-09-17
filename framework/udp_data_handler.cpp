@@ -121,7 +121,7 @@ int udp_data_handler::send(const char* host,int port,const char* data,int size)
 
 int udp_data_handler::send(const sa_in_t* to_addr, packet *p)
 {
-	//static const int UDP_BUF_SIZE = MAX_BUF_SIZE-sizeof(udp_packet) -1 ;
+    //static const int UDP_BUF_SIZE = MAX_BUF_SIZE-sizeof(udp_packet) -1 ;
     int size = p->encode_size() ;
     if(size < 1 || size >sizeof(m_send_buf) ) return -1 ;
 

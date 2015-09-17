@@ -18,13 +18,13 @@ using namespace framework ;
 
 IdServer::IdServer()
 {
-	// TODO Auto-generated constructor stub
+    // TODO Auto-generated constructor stub
 
 }
 
 IdServer::~IdServer()
 {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 
@@ -50,9 +50,9 @@ int IdServer::on_init()
 
     node = root.child("listen") ;
     if(m_client_handler.init(&reactor(),node.attribute("host").value(),
-    		node.attribute("port").as_int())!=0 )
+            node.attribute("port").as_int())!=0 )
     {
-    	error_return(-1,"init udp failed");
+        error_return(-1,"init udp failed");
     }
 
     node = root.child("rules") ;
@@ -62,7 +62,7 @@ int IdServer::on_init()
     if( m_rule_manager.init(offset,step)!=0) error_return(-1,"load rules failed");
     for (pugi::xml_node rule = node.first_child(); rule;rule = rule.next_sibling())
     {
-    	if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
+        if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
     }
 
 
@@ -78,7 +78,7 @@ int IdServer::on_init()
 
     if( load_counter_data(m_counter_manager,m_rule_manager.get_offset(),thread_config) < 0 )
     {
-    	error_return(-1,"load counter failed") ;
+        error_return(-1,"load counter failed") ;
     }
 
     if(m_log_thread.start() !=0) error_return(-1,"init log thread failed") ;
@@ -116,7 +116,7 @@ int IdServer::on_reload()
     node = root.child("rules") ;
     for (pugi::xml_node rule = node.first_child(); rule;rule = rule.next_sibling())
     {
-    	if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
+        if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
     }
 
     info_log_string(m_logger,"system reload success") ;
@@ -132,13 +132,13 @@ void IdServer::on_fini()
     m_log_thread.stop() ;
     m_log_thread.join() ;
 
-	info_log_string(m_logger,"system stopped") ;
+    info_log_string(m_logger,"system stopped") ;
 
 }
 
 void IdServer::on_delay_stop()
 {
-	m_client_handler.fini() ;
+    m_client_handler.fini() ;
 }
 
 void IdServer::on_timer()
@@ -153,58 +153,58 @@ void IdServer::on_timer()
 int IdServer::create_id(string& new_id,const string& rule_name,const string& app_name,const string& salt)
 {
     int64_t begin_time = time_ms() ;
-	Rule* rule = m_rule_manager.get_rule(rule_name) ;
-	if(rule == NULL) return -1 ;
+    Rule* rule = m_rule_manager.get_rule(rule_name) ;
+    if(rule == NULL) return -1 ;
     if(have_escape_char(app_name.data(),app_name.size()) ) return -2 ;
 
-	Counter* counter = m_counter_manager.get_counter(rule_name,app_name) ;
-	if(counter == NULL )
-	{
-		counter = m_counter_manager.create_counter(rule_name,app_name);
-		if(counter == NULL) return -3 ;
-		counter->init(rule_name,app_name,rule->config) ;
-	}
+    Counter* counter = m_counter_manager.get_counter(rule_name,app_name) ;
+    if(counter == NULL )
+    {
+        counter = m_counter_manager.create_counter(rule_name,app_name);
+        if(counter == NULL) return -3 ;
+        counter->init(rule_name,app_name,rule->config) ;
+    }
 
-	rule->lua_manager.create_id(new_id,counter,salt) ;
+    rule->lua_manager.create_id(new_id,counter,salt) ;
 
     m_request_count +=1 ;
     m_total_time += time_ms() - begin_time ;
 
-	return 0 ;
+    return 0 ;
 
 
 }
 
 void IdServer::create_format_id(string& new_id,const string& format,Counter* counter,int width_counter)
 {
-	string_vector tpl_list ;
-	split(tpl_list,format.c_str(),format.size(),'#') ;
+    string_vector tpl_list ;
+    split(tpl_list,format.c_str(),format.size(),'#') ;
 
-	char buf[64] = {0} ;
-	int now = counter->generate_time() ;
-	for(string_vector::iterator it=tpl_list.begin();it!=tpl_list.end();++it)
-	{
-		string& item = *it ;
-		if(item.compare("date")==0)
-		{
-			time2str(buf,sizeof(buf),"%y%m%d",now) ;
-			new_id.append(buf) ;
-		}
-		else if(item.compare("time")==0)
-		{
-			time2str(buf,sizeof(buf),"%H%M%S",now) ;
-			new_id.append(buf) ;
-		}
-		else if(item.compare("counter")==0)
-		{
-			snprintf(buf,sizeof(buf),"%0*d",width_counter, counter->generate_counter()) ;
-			new_id.append(buf) ;
-		}
-		else
-		{
-			new_id.append(item) ;
-		}
-	}
+    char buf[64] = {0} ;
+    int now = counter->generate_time() ;
+    for(string_vector::iterator it=tpl_list.begin();it!=tpl_list.end();++it)
+    {
+        string& item = *it ;
+        if(item.compare("date")==0)
+        {
+            time2str(buf,sizeof(buf),"%y%m%d",now) ;
+            new_id.append(buf) ;
+        }
+        else if(item.compare("time")==0)
+        {
+            time2str(buf,sizeof(buf),"%H%M%S",now) ;
+            new_id.append(buf) ;
+        }
+        else if(item.compare("counter")==0)
+        {
+            snprintf(buf,sizeof(buf),"%0*d",width_counter, counter->generate_counter()) ;
+            new_id.append(buf) ;
+        }
+        else
+        {
+            new_id.append(item) ;
+        }
+    }
 
 }
 

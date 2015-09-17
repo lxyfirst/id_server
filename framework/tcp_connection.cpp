@@ -50,7 +50,7 @@ int tcp_connection::init(base_reactor* reactor,const char* host,int port,packet_
 
     if( reactor->add_handler(fd,this,base_reactor::EVENT_WRITE)!=0 )
     {
-    	close(fd) ;
+        close(fd) ;
         return -3 ;
     }
 
@@ -92,26 +92,26 @@ int tcp_connection::init(base_reactor* reactor,int fd,packet_processor* processo
 
 int tcp_connection::attach_reactor(base_reactor* reactor)
 {
-	if( (m_reactor!= NULL) || (reactor==NULL) ) return -1 ;
-	
-	if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_READ)!=0)
-	{
-		return -2 ;
-	}
-	
-	m_reactor = reactor ;
-	
-	return 0 ;
+    if( (m_reactor!= NULL) || (reactor==NULL) ) return -1 ;
+    
+    if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_READ)!=0)
+    {
+        return -2 ;
+    }
+    
+    m_reactor = reactor ;
+    
+    return 0 ;
 }
 
 void tcp_connection::detach_reactor()
 {
-	if(m_reactor) 
-	{
-		m_reactor->del_handler(m_id.fd) ;
-		m_reactor = NULL ;
-	}
-	
+    if(m_reactor) 
+    {
+        m_reactor->del_handler(m_id.fd) ;
+        m_reactor = NULL ;
+    }
+    
 }
 
 void tcp_connection::inner_fini(bool release)
@@ -120,8 +120,8 @@ void tcp_connection::inner_fini(bool release)
     {
         if(m_reactor) 
         {
-        	m_reactor->del_handler(m_id.fd) ;
-        	m_reactor = NULL ;
+            m_reactor->del_handler(m_id.fd) ;
+            m_reactor = NULL ;
         }
         
         close(m_id.fd) ;
@@ -300,7 +300,7 @@ int tcp_connection::send(const char* data,int size,int delay_flag)
     m_sbuf.push_data(size) ;
     if(m_reactor)
     {
-    	m_reactor->mod_handler(m_id.fd,this,base_reactor::EVENT_READ | base_reactor::EVENT_WRITE) ;
+        m_reactor->mod_handler(m_id.fd,this,base_reactor::EVENT_READ | base_reactor::EVENT_WRITE) ;
     }
     
 
@@ -322,7 +322,7 @@ int tcp_connection::send( packet *p,int delay_flag)
     m_sbuf.push_data(size) ;
     if(m_reactor)
     {
-    	m_reactor->mod_handler(m_id.fd,this,base_reactor::EVENT_READ | base_reactor::EVENT_WRITE) ;
+        m_reactor->mod_handler(m_id.fd,this,base_reactor::EVENT_READ | base_reactor::EVENT_WRITE) ;
     }
     
     if(delay_flag == 0) on_write(m_id.fd) ;

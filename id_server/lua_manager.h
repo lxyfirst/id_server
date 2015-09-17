@@ -57,28 +57,28 @@ private:
 class DateTime
 {
 public:
-	int year() const {return tm_now.tm_year ;};
-	int month() const{return tm_now.tm_mon ;};
-	int mday() const { return tm_now.tm_mday ;} ;
-	int yday() const { return tm_now.tm_yday ;} ;
-	int hour() const { return tm_now.tm_hour;} ;
-	int minute() const { return tm_now.tm_min ;} ;
-	int second() const { return tm_now.tm_sec ;} ;
+    int year() const {return tm_now.tm_year ;};
+    int month() const{return tm_now.tm_mon ;};
+    int mday() const { return tm_now.tm_mday ;} ;
+    int yday() const { return tm_now.tm_yday ;} ;
+    int hour() const { return tm_now.tm_hour;} ;
+    int minute() const { return tm_now.tm_min ;} ;
+    int second() const { return tm_now.tm_sec ;} ;
 
-	DateTime(time_t t)
-	{
-		set_time(t) ;
-	}
+    DateTime(time_t t)
+    {
+        set_time(t) ;
+    }
 
-	void set_time(time_t t)
-	{
-		localtime_r(&t,&tm_now) ;
-		tm_now.tm_year += 1900 ;
-		tm_now.tm_mon += 1 ;
-	}
+    void set_time(time_t t)
+    {
+        localtime_r(&t,&tm_now) ;
+        tm_now.tm_year += 1900 ;
+        tm_now.tm_mon += 1 ;
+    }
 
 private:
-	struct tm tm_now ;
+    struct tm tm_now ;
 };
 
 

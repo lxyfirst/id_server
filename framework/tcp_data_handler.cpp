@@ -48,7 +48,7 @@ int tcp_data_handler::init(base_reactor* reactor,const char* host,int port)
 
     if( reactor->add_handler(fd,this,base_reactor::EVENT_WRITE)!=0 )
     {
-    	close(fd) ;
+        close(fd) ;
         return -3 ;
     }
     m_write_flag = 1 ;
@@ -89,26 +89,26 @@ int tcp_data_handler::init(base_reactor* reactor,int fd)
 
 int tcp_data_handler::attach_reactor(base_reactor* reactor)
 {
-	if( (m_reactor!= NULL) || (reactor==NULL) ) return -1 ;
-	
-	if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_READ)!=0)
-	{
-		return -2 ;
-	}
-	
-	m_reactor = reactor ;
-	
-	return 0 ;
+    if( (m_reactor!= NULL) || (reactor==NULL) ) return -1 ;
+    
+    if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_READ)!=0)
+    {
+        return -2 ;
+    }
+    
+    m_reactor = reactor ;
+    
+    return 0 ;
 }
 
 void tcp_data_handler::detach_reactor()
 {
-	if(m_reactor)
-	{
-		m_reactor->del_handler(m_id.fd) ;
-		m_reactor = NULL ;
-	}
-	
+    if(m_reactor)
+    {
+        m_reactor->del_handler(m_id.fd) ;
+        m_reactor = NULL ;
+    }
+    
 }
 
 
@@ -118,8 +118,8 @@ void tcp_data_handler::inner_fini(bool release)
     {
         if(m_reactor) 
         {
-        	m_reactor->del_handler(m_id.fd) ;
-        	m_reactor = NULL ;
+            m_reactor->del_handler(m_id.fd) ;
+            m_reactor = NULL ;
         }
         close(m_id.fd) ;
         m_id.fd = -1 ;
@@ -259,8 +259,8 @@ void tcp_data_handler::on_write(int fd)
 
         if(m_reactor && (m_write_flag == 1) )
         {
-        	m_reactor->mod_handler(fd,this,base_reactor::EVENT_READ) ;
-        	m_write_flag = 0 ;
+            m_reactor->mod_handler(fd,this,base_reactor::EVENT_READ) ;
+            m_write_flag = 0 ;
         }
 
     }
@@ -305,8 +305,8 @@ int tcp_data_handler::send(const char* data,int size,int delay_flag)
     m_sbuf.push_data(size) ;
     if(m_reactor && (m_write_flag == 0) )
     {
-    	if(m_reactor->mod_handler(m_id.fd,this,
-    			base_reactor::EVENT_READ | base_reactor::EVENT_WRITE)==0 )
+        if(m_reactor->mod_handler(m_id.fd,this,
+                base_reactor::EVENT_READ | base_reactor::EVENT_WRITE)==0 )
         {
             m_write_flag = 1;
         }
@@ -330,11 +330,11 @@ int tcp_data_handler::send( packet *p,int delay_flag)
     m_sbuf.push_data(size) ;
     if(m_reactor && (m_write_flag == 0) )
     {
-    	if(m_reactor->mod_handler(m_id.fd,this,
-    			base_reactor::EVENT_READ | base_reactor::EVENT_WRITE)==0 )
-    	{
-    		m_write_flag = 1;
-    	}
+        if(m_reactor->mod_handler(m_id.fd,this,
+                base_reactor::EVENT_READ | base_reactor::EVENT_WRITE)==0 )
+        {
+            m_write_flag = 1;
+        }
     }
     
     if(delay_flag == 0) on_write(m_id.fd) ;
@@ -380,13 +380,13 @@ int tcp_data_handler::get_sock_addr(sa_in_t* addr) const
 
 int tcp_data_handler::get_remote_addr(char* str_addr,int size)  const
 {
-	if(m_id.fd < 0 ) return -1 ;
-	sa_in_t addr ;
-	socklen_t addr_size = sizeof(addr) ;
-	getpeername(m_id.fd,(struct sockaddr*)&addr,&addr_size) ;
-	inet_ntop(AF_INET,(const void*)&addr.sin_addr,str_addr,size) ;
+    if(m_id.fd < 0 ) return -1 ;
+    sa_in_t addr ;
+    socklen_t addr_size = sizeof(addr) ;
+    getpeername(m_id.fd,(struct sockaddr*)&addr,&addr_size) ;
+    inet_ntop(AF_INET,(const void*)&addr.sin_addr,str_addr,size) ;
 
-	return 0 ;
+    return 0 ;
 }
 
 int tcp_data_handler::get_remote_addr(sa_in_t* addr) const

@@ -30,22 +30,22 @@ struct ThreadConfig
 
 enum
 {
-	DB_LOAD_COUNTER = 1 ,
-	DB_SQL_UPDATE = 3 ,
-	DB_SQL_INSERT = 4 ,
-	DB_SQL_DELETE = 5 ,
+    DB_LOAD_COUNTER = 1 ,
+    DB_SQL_UPDATE = 3 ,
+    DB_SQL_INSERT = 4 ,
+    DB_SQL_DELETE = 5 ,
 
 };
 
 class DataThread: public framework::simple_thread
 {
 public:
-	DataThread(framework::log_thread& logger,const ThreadConfig& config,int pipe_fd);
-	virtual ~DataThread();
+    DataThread(framework::log_thread& logger,const ThreadConfig& config,int pipe_fd);
+    virtual ~DataThread();
 
 
 
-	void on_pipe_message(const framework::packet_info* msg);
+    void on_pipe_message(const framework::packet_info* msg);
 protected:
     virtual int on_init() ;
     virtual void on_fini() ;
@@ -60,13 +60,13 @@ protected:
 
 
 private:
-	framework::log_thread& m_logger ;
-	const ThreadConfig& m_config ;
-	framework::poll_reactor m_reactor ;
-	framework::pipe_handler m_handler ;
-	MysqlConnection m_db ;
-	int m_pipe_fd ;
-	int m_now ;
+    framework::log_thread& m_logger ;
+    const ThreadConfig& m_config ;
+    framework::poll_reactor m_reactor ;
+    framework::pipe_handler m_handler ;
+    MysqlConnection m_db ;
+    int m_pipe_fd ;
+    int m_now ;
 
 };
 

@@ -22,21 +22,21 @@ public:
     typedef std::tr1::function<void (const packet_info*) > callback_type ;
     
 public:
-	pipe_handler() ;
+    pipe_handler() ;
 
-	virtual ~pipe_handler();
+    virtual ~pipe_handler();
 public:
-	/*
-	 * @return: 0 on success
-	 */
-	int init(base_reactor& reactor,int pipe_fd,const callback_type& callback) ;
+    /*
+     * @return: 0 on success
+     */
+    int init(base_reactor& reactor,int pipe_fd,const callback_type& callback) ;
 
     void fini() ;
-	/*
-	 * @return: 0 on success
-	 */
-	int send_pipe_message(const packet_info* msg) ;
-	int send_pipe_message(const char* data,int size) ;
+    /*
+     * @return: 0 on success
+     */
+    int send_pipe_message(const packet_info* msg) ;
+    int send_pipe_message(const char* data,int size) ;
 
 protected:
     void on_read(int fd) ;

@@ -14,11 +14,11 @@ using std::string ;
 
 struct CounterData
 {
-	string rule_name ;
-	string app_name ;
+    string rule_name ;
+    string app_name ;
     int node_offset ;
-	int counter ;
-	int update_time ;
+    int counter ;
+    int update_time ;
 };
 
 struct RuleConfig ;
@@ -26,36 +26,36 @@ struct RuleConfig ;
 class Counter
 {
 public:
-	/*
-	 * @brief load data from database
-	 */
-	void load(const CounterData& data) ;
+    /*
+     * @brief load data from database
+     */
+    void load(const CounterData& data) ;
 
-	/*
-	 * @brief init data
-	 */
-	void init(const string& rule_name,const string& app_name,const RuleConfig& rule_config);
+    /*
+     * @brief init data
+     */
+    void init(const string& rule_name,const string& app_name,const RuleConfig& rule_config);
 
-	/*
-	 * @brief create auto increment counter
-	 * @return new counter
-	 */
-	int generate_counter() ;
+    /*
+     * @brief create auto increment counter
+     * @return new counter
+     */
+    int generate_counter() ;
 
-	/*
-	 * @brief get timestamp never rollback
-	 * @return timestamp
-	 */
-	int generate_time() ;
+    /*
+     * @brief get timestamp never rollback
+     * @return timestamp
+     */
+    int generate_time() ;
 
-	/*
-	 * @brief save data to database
-	 */
-	void async_save() ;
+    /*
+     * @brief save data to database
+     */
+    void async_save() ;
 
-	const CounterData& data() { return m_data ; } ;
+    const CounterData& data() { return m_data ; } ;
 private:
-	CounterData m_data ;
+    CounterData m_data ;
 
 };
 
@@ -65,28 +65,28 @@ std::string& get_counter_key(string& data,const char* rule_name,const char* app_
 class CounterManager
 {
 public:
-	typedef std::tr1::unordered_map<string,Counter> CounterContainer ;
+    typedef std::tr1::unordered_map<string,Counter> CounterContainer ;
 
-	Counter* get_counter(const string& rule_name,const string& app_name);
+    Counter* get_counter(const string& rule_name,const string& app_name);
 
-	Counter* create_counter(const string& rule_name,const string& app_name);
+    Counter* create_counter(const string& rule_name,const string& app_name);
 
-	/*
-	 * @brief load counter data from database
-	 */
-	Counter* load_counter(const CounterData& data) ;
+    /*
+     * @brief load counter data from database
+     */
+    Counter* load_counter(const CounterData& data) ;
 
 public:
-	CounterManager();
-	~CounterManager();
+    CounterManager();
+    ~CounterManager();
 
 
 private:
-	CounterManager(const CounterManager& o) ;
-	CounterManager& operator=(const CounterManager& o) ;
+    CounterManager(const CounterManager& o) ;
+    CounterManager& operator=(const CounterManager& o) ;
 
 private:
-	CounterContainer m_counter_list ;
+    CounterContainer m_counter_list ;
 
 };
 

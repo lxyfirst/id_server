@@ -23,12 +23,12 @@ int hex2bin(unsigned char* bin,const char* hex,int size) ;
 
 inline int base64_encode_size(int len)
 {
-	return (((len + 2) / 3) * 4) ;
+    return (((len + 2) / 3) * 4) ;
 }
 
 inline int base64_decode_size(int len)
 {
-	return (((len + 3) / 4) * 3) ;
+    return (((len + 3) / 4) * 3) ;
 }
 
 int base64_encode(unsigned char* dst,const unsigned char* src,int src_size) ;
