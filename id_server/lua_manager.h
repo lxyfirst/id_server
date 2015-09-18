@@ -43,7 +43,6 @@ public:
      */
     void create_id(std::string& new_id,Counter* counter,const std::string& salt);
 
-    //int width_counter() ;
     int min_counter() ;
     int max_counter() ;
     int reset_seconds() ;

@@ -36,7 +36,6 @@ int RuleManager::load_rule_config(pugi::xml_node& node)
     config.step = m_step;
     config.offset = m_offset ;
     config.batch_save = node.attribute("batch_save").as_int() ;
-    //config.width_counter = lua_manager.width_counter();
     config.min_counter = lua_manager.min_counter();
     config.max_counter = lua_manager.max_counter();
     config.reset_seconds = lua_manager.reset_seconds();

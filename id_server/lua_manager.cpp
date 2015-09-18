@@ -38,14 +38,6 @@ void LuaManager::create_id(std::string& new_id,Counter* counter,const std::strin
     }
 }
 
-/*
-int LuaManager::width_counter()
-{
-    return lua_tinker::call<int>(m_lua,"width_counter") ;
-}
-*/
-
-
 int LuaManager::min_counter()
 {
     return lua_tinker::call<int>(m_lua,"min_counter") ;
