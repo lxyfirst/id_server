@@ -133,7 +133,7 @@ inline time_t cycle_begin_time(time_t t,int cycle_seconds = SECONDS_OF_DAY , boo
 
 }
 
-inline bool is_same_day(time_t first_t, time_t second_t, int cycle_seconds = SECONDS_OF_DAY)
+inline bool is_same_cycle(time_t first_t, time_t second_t, int cycle_seconds = SECONDS_OF_DAY)
 {
     if (timezone == 0) tzset();
     return (first_t - timezone) / cycle_seconds == (second_t - timezone )/ cycle_seconds ;

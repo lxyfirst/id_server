@@ -48,7 +48,7 @@ int Counter::generate_counter()
     int now = generate_time() ;
     int reset_seconds = rule->config.reset_seconds  ;
 
-    if( ( reset_seconds>0 && (!framework::is_same_day(m_data.update_time,now,reset_seconds) ) )||
+    if( ( reset_seconds>0 && (!framework::is_same_cycle(m_data.update_time,now,reset_seconds) ) )||
              (m_data.counter > rule->config.max_counter)  )
     {
         m_data.counter = rule->config.min_counter + rule->config.offset ;
