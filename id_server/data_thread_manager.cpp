@@ -36,6 +36,7 @@ int load_counter_data(CounterManager& counter_manager,int node_offset,const Thre
         data.node_offset = node_offset ;
         data.counter = atoi(row[2]) ;
         data.update_time = atoi(row[3]) ;
+        data.saved_counter = data.counter ;
         counter_manager.load_counter(data) ;
 
     }
@@ -155,7 +156,7 @@ int DataThreadManager::async_update(const CounterData& data)
     char* sql_buf = new char[MAX_SQL_SIZE] ;
     snprintf(sql_buf,MAX_SQL_SIZE,
             "replace into counter set rule_name='%s',app_name='%s',node_offset=%d,counter=%d,update_time=%d",
-            data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.counter,data.update_time ) ;
+            data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.saved_counter,data.update_time ) ;
 
     int index = hash(data.app_name.c_str(),data.app_name.size() ) % m_handler_list.size() ;
     pipe_handler* front_handler = m_handler_list[index] ;

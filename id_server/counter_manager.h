@@ -19,6 +19,7 @@ struct CounterData
     int node_offset ;
     int counter ;
     int update_time ;
+    int saved_counter ;
 };
 
 struct RuleConfig ;

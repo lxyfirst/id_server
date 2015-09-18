@@ -31,6 +31,7 @@ void Counter::init(const string& rule_name,const string& app_name,const RuleConf
     m_data.node_offset = rule_config.offset ;
     m_data.counter = rule_config.min_counter + rule_config.offset ;
     m_data.update_time = 0 ;
+    m_data.saved_counter = m_data.counter ;
 }
 
 int Counter::generate_time()
@@ -44,19 +45,26 @@ int Counter::generate_counter()
     Rule* rule = get_app().get_rule(m_data.rule_name) ;
     if(rule == NULL || rule->config.offset != m_data.node_offset ) return -1 ;
 
-    m_data.counter += rule->config.step ;
-    int now = generate_time() ;
-    int reset_seconds = rule->config.reset_seconds  ;
+    RuleConfig& config = rule->config ;
 
-    if( ( reset_seconds>0 && (!framework::is_same_cycle(m_data.update_time,now,reset_seconds) ) )||
-             (m_data.counter > rule->config.max_counter)  )
+    m_data.counter += config.step ;
+    int now = generate_time() ;
+
+    if( (!framework::is_same_cycle(m_data.update_time,now,config.reset_seconds)) ||
+             (m_data.counter > config.max_counter)  )
     {
-        m_data.counter = rule->config.min_counter + rule->config.offset ;
+        m_data.counter = config.min_counter + config.offset ;
+        m_data.saved_counter = m_data.counter ;
     }
 
     m_data.update_time = now ;
 
-    async_save() ;
+    if(m_data.counter >= m_data.saved_counter)
+    {
+        
+        m_data.saved_counter = m_data.counter + config.step * batch_save ;
+        async_save() ;
+    }
 
 
     return m_data.counter ;

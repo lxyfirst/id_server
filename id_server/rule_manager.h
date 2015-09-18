@@ -20,6 +20,7 @@ struct RuleConfig
     char step ;
     char offset ;
     char width_counter ;
+    char batch_save ;
     int min_counter ;
     int max_counter ;
     int reset_seconds ;

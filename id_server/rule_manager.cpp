@@ -35,11 +35,14 @@ int RuleManager::load_rule_config(pugi::xml_node& node)
     lua_manager.load(node.attribute("lua_file").value()) ;
     config.step = m_step;
     config.offset = m_offset ;
+    config.batch_save = node.attribute("batch_save").as_int() ;
     //config.width_counter = lua_manager.width_counter();
     config.min_counter = lua_manager.min_counter();
     config.max_counter = lua_manager.max_counter();
     config.reset_seconds = lua_manager.reset_seconds();
     if(config.min_counter >= config.max_counter || config.min_counter < 0) return -1;
+    if(config.batch_save < 1 ) config.batch_save = 1 ;
+    if(config.batch_save > 100 ) config.batch_save =100 ;
 
 
     Rule& rule = m_rule_list[node.attribute("name").value()] ;
