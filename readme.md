@@ -34,7 +34,7 @@
     step表示ID自增的步长，也可以理解为同时运行的服务器数量 。 
     offset表示ID自增的偏移量，也可以理解为每个服务器的ID，从0开始，不能超过step,每个服务器不能重复 。
     <rules step="2"  offset="1" >
-        <rule name="task" lua_file="task.lua" />
+        <rule name="task" lua_file="task.lua" batch_save="10" />
     </rules>
 
 ### ID规则定义 

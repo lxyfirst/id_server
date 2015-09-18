@@ -52,6 +52,8 @@ int UdpHandler::process_packet(const udp_packet* pi)
         return send_response(pi->addr,-1,"invalid format") ;
     }
     //request : {action,app_name,rule_name,salt}
+    if(request.isObject()) return send_response(pi->addr,-1,"invalid request") ;
+
     if(!request["app_name"].isString()) return send_response(pi->addr,-1,"need app_name") ;
 
     if(!request["rule_name"].isString()) return send_response(pi->addr,-1,"need rule_name");
