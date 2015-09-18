@@ -63,17 +63,12 @@ int Counter::generate_counter()
     {
         
         m_data.saved_counter = m_data.counter + config.step * batch_save ;
-        async_save() ;
+        get_app().data_manager().async_update(m_data) ;
     }
 
 
     return m_data.counter ;
 
-}
-
-void Counter::async_save()
-{
-    get_app().data_manager().async_update(m_data) ;
 }
 
 CounterManager::CounterManager()

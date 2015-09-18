@@ -49,10 +49,6 @@ public:
      */
     int generate_time() ;
 
-    /*
-     * @brief save data to database
-     */
-    void async_save() ;
 
     const CounterData& data() { return m_data ; } ;
 private:

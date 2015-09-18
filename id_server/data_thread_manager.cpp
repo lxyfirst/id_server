@@ -7,7 +7,6 @@
 
 #include "framework/system_util.h"
 #include "framework/member_function_bind.h"
-#include "framework/pipe_handler.h"
 #include "data_thread_manager.h"
 
 #include "id_server.h"
@@ -22,7 +21,8 @@ int load_counter_data(CounterManager& counter_manager,int node_offset,const Thre
 
     db.use(config.dbname.c_str());
 
-    if(db.exec_format("select rule_name,app_name,counter,update_time from counter where node_offset=%d",node_offset) < 0 )
+    if(db.exec_format("select rule_name,app_name,counter,update_time from counter where node_offset=%d",
+        node_offset ) < 0 )
     {
         return -1 ;
     }
@@ -67,27 +67,10 @@ int DataThreadManager::init(int thread_count,const ThreadConfig& thread_config,l
     m_config  = thread_config ;
     m_thread_count = thread_count ;
     m_thread_list.resize(thread_count) ;
-    m_handler_list.resize(thread_count) ;
 
     for(int i = 0 ; i < thread_count ; ++i)
     {
-        int pipe_fd[2] = {0} ;
-        if(socketpair(AF_UNIX,SOCK_SEQPACKET,0,pipe_fd)!=0)
-        {
-            error_return(-1,"create pipe failed") ;
-        }
-
-        pipe_handler* front_handler = new pipe_handler ;
-        if(front_handler==NULL) error_return(-1,"alloc failed") ;
-        pipe_handler::callback_type callback = member_function_bind(&DataThreadManager::on_pipe_message,this) ;
-        if(front_handler->init(get_app().reactor(),pipe_fd[1],callback )!=0 )
-        {
-            delete front_handler ;
-            error_return(-1,"init pipe failed") ;
-        }
-        m_handler_list[i] = front_handler ;
-
-        DataThread* thread = new DataThread(logger,m_config,pipe_fd[0]) ;
+        DataThread* thread = new DataThread(logger,m_config) ;
         if(thread== NULL) error_return(-1,"alloc failed") ;
 
         if(thread->start()!=0)
@@ -106,15 +89,6 @@ int DataThreadManager::init(int thread_count,const ThreadConfig& thread_config,l
 
 void DataThreadManager::fini()
 {
-
-    for(HandlerContainer::iterator it = m_handler_list.begin();it!=m_handler_list.end();++it)
-    {
-        pipe_handler* front_handler = *it ;
-
-        if(front_handler) delete front_handler ;
-    }
-
-    m_handler_list.clear() ;
 
     for(ThreadContainer::iterator it = m_thread_list.begin();it!=m_thread_list.end();++it)
     {
@@ -144,27 +118,18 @@ static int hash(const char* data,int size)
 
 
 
-
-
-
-
-
-int DataThreadManager::async_update(const CounterData& data)
+int DataThreadManager::async_save(const CounterData& data)
 {
-    enum { MAX_SQL_SIZE = 2000 } ;
+    enum { MAX_SQL_SIZE = 1024 } ;
 
     char* sql_buf = new char[MAX_SQL_SIZE] ;
     snprintf(sql_buf,MAX_SQL_SIZE,
             "replace into counter set rule_name='%s',app_name='%s',node_offset=%d,counter=%d,update_time=%d",
             data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.saved_counter,data.update_time ) ;
 
-    int index = hash(data.app_name.c_str(),data.app_name.size() ) % m_handler_list.size() ;
-    pipe_handler* front_handler = m_handler_list[index] ;
-    packet_info pi  ;
-    pi.type = DB_SQL_UPDATE ;
-    pi.size = 0 ;
-    pi.data = sql_buf ;
-    if( front_handler->send_pipe_message(&pi)!=0)
+    int index = hash(data.app_name.c_str(),data.app_name.size() ) % m_thread_list.size() ;
+    DataThread* thread  = m_thread_list[index] ;
+    if( thread->async_exec_sql(sql_buf)!=0)
     {
         warn_log_format(get_app().logger(),"send pipe failed sql:%s",sql_buf) ;
         delete[] sql_buf ;
@@ -176,22 +141,3 @@ int DataThreadManager::async_update(const CounterData& data)
 }
 
 
-void DataThreadManager::on_pipe_message(const framework::packet_info* msg)
-{
-    switch(msg->type)
-    {
-    case DB_SQL_UPDATE:
-        on_sql_update_response(msg) ;
-        break ;
-
-    }
-
-
-}
-
-
-
-void DataThreadManager::on_sql_update_response(const packet_info* msg)
-{
-
-}

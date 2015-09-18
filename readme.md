@@ -75,7 +75,7 @@
     响应：{"code":0,"message":"ok","data":{"counter":3,"node_offset":1}}
 
 ### 编译
-    $make 
+    $make release
     $make install 
     make install会将部署所需的文件拷贝到deploy目录下 。
 
