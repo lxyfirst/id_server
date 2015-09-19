@@ -10,6 +10,8 @@
 #include <string>
 #include <tr1/unordered_map>
 
+#include "framework/timer_manager.h"
+
 using std::string ;
 
 struct CounterData
@@ -27,6 +29,8 @@ struct RuleConfig ;
 class Counter
 {
 public:
+    Counter() ;
+    ~Counter() ;
     /*
      * @brief load data from database
      */
@@ -51,7 +55,17 @@ public:
 
 
     const CounterData& data() { return m_data ; } ;
+
+     /*
+     * @brief save data and auto try again if failed
+     */
+    void async_save(framework::timer_manager* manager = NULL) ;
 private:
+    Counter(const Counter& c) ;
+    Counter& operator=(const Counter& c) ;
+
+private:
+    framework::template_timer<Counter,&Counter::async_save> m_timer ;
     CounterData m_data ;
 
 };
@@ -62,7 +76,7 @@ std::string& get_counter_key(string& data,const char* rule_name,const char* app_
 class CounterManager
 {
 public:
-    typedef std::tr1::unordered_map<string,Counter> CounterContainer ;
+    typedef std::tr1::unordered_map<string,Counter*> CounterContainer ;
 
     Counter* get_counter(const string& rule_name,const string& app_name);
 

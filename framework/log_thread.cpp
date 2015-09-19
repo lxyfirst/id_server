@@ -105,7 +105,7 @@ void log_thread::run_once()
         on_timeout();
     }
 
-    m_reactor.run_once(5000) ;
+    m_reactor.run_once(2000) ;
 
 }
 

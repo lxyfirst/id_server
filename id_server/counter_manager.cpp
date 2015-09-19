@@ -18,6 +18,15 @@ std::string&  get_counter_key(std::string& data , const char* rule_name,const ch
     return data ;
 }
 
+Counter::Counter()
+{
+    m_timer.set_owner(this) ;
+}
+
+Counter::~Counter()
+{
+    get_app().del_timer(&m_timer) ;
+}
 
 void Counter::load(const CounterData& data)
 {
@@ -63,12 +72,23 @@ int Counter::generate_counter()
     {
         
         m_data.saved_counter = m_data.counter + config.step * config.batch_save ;
-        get_app().data_manager().async_save(m_data) ;
+        async_save() ;
     }
-
 
     return m_data.counter ;
 
+}
+
+void Counter::async_save(framework::timer_manager* manager)
+{
+    if( get_app().data_manager().async_save(m_data) !=0) 
+    {
+        get_app().add_timer_after(&m_timer,10000) ;
+    }
+    else
+    {
+        get_app().del_timer(&m_timer) ;
+    }
 }
 
 CounterManager::CounterManager()
@@ -79,19 +99,20 @@ CounterManager::CounterManager()
 
 CounterManager::~CounterManager()
 {
-    // TODO Auto-generated destructor stub
+    for(CounterContainer::iterator it=m_counter_list.begin();it!=m_counter_list.end();++it)
+    {
+        delete it->second ;
+    }
 }
 
 
 Counter* CounterManager::load_counter(const CounterData& data)
 {
-    std::string key ;
-    get_counter_key(key,data.rule_name.c_str(),data.app_name.c_str());
+    Counter* counter = create_counter(data.rule_name,data.app_name)  ;
+    
+    if(counter) counter->load(data) ;
 
-    Counter& counter = m_counter_list[key] ;
-    counter.load(data) ;
-
-    return &counter ;
+    return counter ;
 
 }
 
@@ -100,9 +121,14 @@ Counter* CounterManager::create_counter(const string& rule_name,const string& ap
     std::string key ;
     get_counter_key(key,rule_name.c_str(),app_name.c_str());
 
-    Counter& counter = m_counter_list[key] ;
+    Counter* counter = m_counter_list[key] ;
+    if( counter  == NULL) 
+    {
+        counter = new Counter ;
+        m_counter_list[key] = counter ;
+    }
 
-    return &counter ;
+    return counter ;
 
 }
 
@@ -113,6 +139,6 @@ Counter* CounterManager::get_counter(const std::string& rule_name,const std::str
 
     CounterContainer::iterator it = m_counter_list.find(key) ;
     if(it == m_counter_list.end() ) return NULL ;
-    return &it->second ;
+    return it->second ;
 }
 

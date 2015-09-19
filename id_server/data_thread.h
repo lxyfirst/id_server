@@ -16,6 +16,7 @@
 #include "framework/log_thread.h"
 #include "mysql_connection.h"
 
+#include "counter_manager.h"
 
 struct ThreadConfig
 {
@@ -34,7 +35,12 @@ public:
     DataThread(framework::log_thread& logger,const ThreadConfig& config);
     virtual ~DataThread();
 
-    int async_exec_sql(const char* sql) ;
+    /*
+     *@brief  called by main thread
+     *@return 0 on success , else return -1
+     */
+    int async_save(const CounterData& data) ;
+
 
     void on_event(int64_t v) ;
 protected:
@@ -49,7 +55,7 @@ private:
     const ThreadConfig& m_config ;
     framework::poll_reactor m_reactor ;
     framework::eventfd_handler m_handler ;
-    framework::circular_queue<const char*> m_queue ;
+    framework::circular_queue<CounterData> m_queue ;
     MysqlConnection m_db ;
     int m_now ;
 

@@ -85,6 +85,6 @@ function bench_process($process,$count)
 
 //$id = create_id("task","test","xx") ;
 
-bench_process(4,10000) ;
+bench_process(4,200000) ;
 
 ?>

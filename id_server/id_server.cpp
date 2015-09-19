@@ -75,7 +75,7 @@ int IdServer::on_init()
     thread_config.password = node.attribute("password").value();
     thread_config.dbname = node.attribute("dbname").value();
     thread_config.queue_size= node.attribute("queue_size").as_int();
-    if(thread_config.queue_size < 1024 || thread_config.queue_size > 1048576) 
+    if(thread_config.queue_size < 16 || thread_config.queue_size > 1048576) 
     {
         error_return(-1,"invalid queue_size, should between (1024,1048576)") ;
     }

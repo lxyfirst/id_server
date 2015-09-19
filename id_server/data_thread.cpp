@@ -42,8 +42,6 @@ int DataThread::on_init()
 
 void DataThread::on_fini()
 {
-    run_once();
-
     on_event(1) ;
 
     m_db.fini();
@@ -81,16 +79,14 @@ void DataThread::run_once()
         on_timeout();
     }
 
-    m_reactor.run_once(5000) ;
+    m_reactor.run_once(2000) ;
 
 }
 
 
-
-int DataThread::async_exec_sql(const char* sql)
+int DataThread::async_save(const CounterData& data)
 {
-
-    if( m_queue.push(sql) !=0 ) return -1;
+    if( m_queue.push(data) !=0 ) return -1;
     m_handler.notify() ;
     return 0 ;
 }
@@ -98,25 +94,22 @@ int DataThread::async_exec_sql(const char* sql)
 
 void DataThread::on_event(int64_t v)
 {
-    const char* sql = NULL ;
-    while( m_queue.pop(sql) == 0 )
+    char  sql[1024]  ;
+    CounterData data ;
+    while( m_queue.pop(data) == 0 )
     {
-        if(sql == NULL ) continue ;
+        snprintf(sql,sizeof(sql),
+            "replace into counter set rule_name='%s',app_name='%s',node_offset=%d,counter=%d,update_time=%d",
+            data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.saved_counter,data.update_time ) ;
 
         debug_log_format(m_logger,"exec sql:%s",sql) ;
-
         if(m_db.exec(sql) <0 )
         {
             warn_log_format(m_logger,"db failed thread:%ld errno:%d sql:%s\n",
                 id(), m_db.get_errno(), sql) ;
         }
 
-        delete[] sql ;
     }
 
 }
-
-
-
-
 

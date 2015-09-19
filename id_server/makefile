@@ -29,7 +29,7 @@ CFLAGS += -O2 -DNDEBUG
 LDFLAGS += -ltcmalloc_minimal
 else
 CFLAGS += -g -DDEBUG 
-LDFLAGS += -ltcmalloc
+LDFLAGS += -ltcmalloc_and_profiler
 endif
 
 all: $(BINS) $(SO_LIB) $(STATIC_LIB) 

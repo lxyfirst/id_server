@@ -120,19 +120,12 @@ static int hash(const char* data,int size)
 
 int DataThreadManager::async_save(const CounterData& data)
 {
-    enum { MAX_SQL_SIZE = 1024 } ;
-
-    char* sql_buf = new char[MAX_SQL_SIZE] ;
-    snprintf(sql_buf,MAX_SQL_SIZE,
-            "replace into counter set rule_name='%s',app_name='%s',node_offset=%d,counter=%d,update_time=%d",
-            data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.saved_counter,data.update_time ) ;
-
     int index = hash(data.app_name.c_str(),data.app_name.size() ) % m_thread_list.size() ;
     DataThread* thread  = m_thread_list[index] ;
-    if( thread->async_exec_sql(sql_buf)!=0)
+    if( thread->async_save(data)!=0)
     {
-        warn_log_format(get_app().logger(),"send pipe failed sql:%s",sql_buf) ;
-        delete[] sql_buf ;
+        warn_log_format(get_app().logger(),"save failed rule_name:%s app_name:%s counter:%d",
+            data.rule_name.c_str(),data.app_name.c_str(),data.saved_counter ) ;
         return -2 ;
     }
 
