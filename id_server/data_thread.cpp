@@ -27,8 +27,8 @@ DataThread::~DataThread()
 
 int DataThread::on_init()
 {
-    if(m_reactor.init(2)!=0) error_return(-1,"init reactor failed") ;
-    if(m_queue.init(10000)!=0) error_return(-1,"init queue failed") ;
+    if(m_reactor.init(4)!=0) error_return(-1,"init reactor failed") ;
+    if(m_queue.init(m_config.queue_size)!=0) error_return(-1,"init queue failed") ;
     eventfd_handler::callback_type callback = member_function_bind(&DataThread::on_event,this) ;
     if(m_handler.init(m_reactor,callback )!=0 )
     {
@@ -96,7 +96,7 @@ int DataThread::async_exec_sql(const char* sql)
 }
 
 
-void DataThread::on_event(int v)
+void DataThread::on_event(int64_t v)
 {
     const char* sql = NULL ;
     while( m_queue.pop(sql) == 0 )
@@ -108,7 +108,7 @@ void DataThread::on_event(int v)
         if(m_db.exec(sql) <0 )
         {
             warn_log_format(m_logger,"db failed thread:%ld errno:%d sql:%s\n",
-                id(), m_db.get_errno(), msg->data) ;
+                id(), m_db.get_errno(), sql) ;
         }
 
         delete[] sql ;

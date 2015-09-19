@@ -74,6 +74,11 @@ int IdServer::on_init()
     thread_config.user = node.attribute("user").value();
     thread_config.password = node.attribute("password").value();
     thread_config.dbname = node.attribute("dbname").value();
+    thread_config.queue_size= node.attribute("queue_size").as_int();
+    if(thread_config.queue_size < 1024 || thread_config.queue_size > 1048576) 
+    {
+        error_return(-1,"invalid queue_size, should between (1024,1048576)") ;
+    }
     int thread_count = node.attribute("thread_count").as_int() ;
 
     if( load_counter_data(m_counter_manager,m_rule_manager.get_offset(),thread_config) < 0 )
@@ -144,7 +149,7 @@ void IdServer::on_delay_stop()
 void IdServer::on_timer()
 {
     int avg_time = m_request_count >0 ? m_total_time / m_request_count : 0 ;
-    debug_log_format(m_logger,"request count:%d avg_time:%d",m_request_count,avg_time) ;
+    trace_log_format(m_logger,"request count:%d avg_time:%d",m_request_count,avg_time) ;
     m_request_count = 0 ;
     m_total_time = 0 ;
 }

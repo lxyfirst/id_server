@@ -25,7 +25,7 @@ struct ThreadConfig
     std::string dbname ;
     std::string charset ;
     int port ;
-    int timeout ;
+    int queue_size ;
 }   ;
 
 class DataThread: public framework::simple_thread
@@ -36,7 +36,7 @@ public:
 
     int async_exec_sql(const char* sql) ;
 
-    void on_event(int v) ;
+    void on_event(int64_t v) ;
 protected:
     virtual int on_init() ;
     virtual void on_fini() ;

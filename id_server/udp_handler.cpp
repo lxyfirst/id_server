@@ -40,19 +40,17 @@ int UdpHandler::send_response(const sa_in_t& to_addr,int code,const char* messag
 int UdpHandler::process_packet(const udp_packet* pi)
 {
 
-    if(pi->data[0] != '{')
-    {
-        return send_response(pi->addr,-1,"invalid format") ;
-    }
-
+    if(pi->data[0] != '{') return 0 ;
+    
     Json::Reader reader ;
     Json::Value request ;
     if(! reader.parse(pi->data,pi->data + pi->data_size,request,false) )
     {
-        return send_response(pi->addr,-1,"invalid format") ;
+        return 0 ;
     }
+
     //request : {action,app_name,rule_name,salt}
-    if(request.isObject()) return send_response(pi->addr,-1,"invalid request") ;
+    if(!request.isObject()) return send_response(pi->addr,-1,"invalid request") ;
 
     if(!request["app_name"].isString()) return send_response(pi->addr,-1,"need app_name") ;
 

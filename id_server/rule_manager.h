@@ -7,9 +7,11 @@
 #ifndef RULE_MANAGER_H_
 #define RULE_MANAGER_H_
 
+#include <stdint.h>
 #include <string>
 #include <tr1/memory>
 #include <tr1/unordered_map>
+
 
 #include "pugixml/pugixml.hpp"
 
@@ -17,9 +19,9 @@
 
 struct RuleConfig
 {
-    char step ;
-    char offset ;
-    char batch_save ;
+    int8_t step ;
+    int8_t offset ;
+    int16_t batch_save ;
     int min_counter ;
     int max_counter ;
     int reset_seconds ;

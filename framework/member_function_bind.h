@@ -79,7 +79,7 @@ private:
     F m_f ;
     T* m_t ;
 public:
-    simple_member_func3(F f,T* t):m_f(f),m_t(t) {} ;
+    simple_member_func4(F f,T* t):m_f(f),m_t(t) {} ;
     R operator()(A1& a1,A2& a2,A3& a3,A4& a4)
     {
         return (m_t->*m_f)(a1,a2,a3,a4) ;

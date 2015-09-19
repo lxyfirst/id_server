@@ -41,7 +41,7 @@ int RuleManager::load_rule_config(pugi::xml_node& node)
     config.reset_seconds = lua_manager.reset_seconds();
     if(config.min_counter >= config.max_counter || config.min_counter < 0) return -1;
     if(config.batch_save < 1 ) config.batch_save = 1 ;
-    if(config.batch_save > 100 ) config.batch_save =100 ;
+    if(config.batch_save > 10000 ) config.batch_save =10000 ;
 
 
     Rule& rule = m_rule_list[node.attribute("name").value()] ;

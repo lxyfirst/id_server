@@ -62,8 +62,8 @@ int Counter::generate_counter()
     if(m_data.counter >= m_data.saved_counter)
     {
         
-        m_data.saved_counter = m_data.counter + config.step * batch_save ;
-        get_app().data_manager().async_update(m_data) ;
+        m_data.saved_counter = m_data.counter + config.step * config.batch_save ;
+        get_app().data_manager().async_save(m_data) ;
     }
 
 
