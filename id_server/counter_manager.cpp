@@ -85,10 +85,6 @@ void Counter::async_save(framework::timer_manager* manager)
     {
         get_app().add_timer_after(&m_timer,10000) ;
     }
-    else
-    {
-        get_app().del_timer(&m_timer) ;
-    }
 }
 
 CounterManager::CounterManager()
