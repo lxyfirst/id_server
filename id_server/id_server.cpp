@@ -75,11 +75,10 @@ int IdServer::on_init()
     thread_config.password = node.attribute("password").value();
     thread_config.dbname = node.attribute("dbname").value();
     thread_config.queue_size= node.attribute("queue_size").as_int();
-    if(thread_config.queue_size < 16 || thread_config.queue_size > 1048576) 
+    if(thread_config.queue_size < 10 || thread_config.queue_size > 1000000) 
     {
-        error_return(-1,"invalid queue_size, should between (1024,1048576)") ;
+        error_return(-1,"invalid queue_size, should between (10,1000000)") ;
     }
-    int thread_count = node.attribute("thread_count").as_int() ;
 
     if( load_counter_data(m_counter_manager,m_rule_manager.get_offset(),thread_config) < 0 )
     {
@@ -88,6 +87,7 @@ int IdServer::on_init()
 
     if(m_log_thread.start() !=0) error_return(-1,"init log thread failed") ;
 
+    int thread_count = node.attribute("thread_count").as_int() ;
     if(m_thread_manager.init(thread_count,thread_config,m_log_thread)!=0)
     {
         error_return(-1,"init thread failed") ;
@@ -165,9 +165,8 @@ int IdServer::create_id(string& new_id,const string& rule_name,const string& app
     Counter* counter = m_counter_manager.get_counter(rule_name,app_name) ;
     if(counter == NULL )
     {
-        counter = m_counter_manager.create_counter(rule_name,app_name);
+        counter = m_counter_manager.create_counter(rule_name,app_name,rule->config);
         if(counter == NULL) return -3 ;
-        counter->init(rule_name,app_name,rule->config) ;
     }
 
     rule->lua_manager.create_id(new_id,counter,salt) ;

@@ -104,33 +104,38 @@ CounterManager::~CounterManager()
 
 Counter* CounterManager::load_counter(const CounterData& data)
 {
-    Counter* counter = create_counter(data.rule_name,data.app_name)  ;
-    
-    if(counter) counter->load(data) ;
 
+
+    Counter* counter = inner_create_counter(data.rule_name.c_str(),data.app_name.c_str());
+    if( counter ) counter->load(data) ;
+    return counter ;
+}
+
+Counter* CounterManager::create_counter(const string& rule_name,const string& app_name,const RuleConfig& config )
+{
+    Counter* counter = inner_create_counter(rule_name.c_str(),app_name.c_str());
+    if( counter ) counter->init(rule_name,app_name,config) ;
     return counter ;
 
 }
 
-Counter* CounterManager::create_counter(const string& rule_name,const string& app_name )
+Counter* CounterManager::inner_create_counter(const string& rule_name,const string& app_name)
 {
-    std::string key ;
+    string key ;
     get_counter_key(key,rule_name.c_str(),app_name.c_str());
 
-    Counter* counter = m_counter_list[key] ;
-    if( counter  == NULL) 
-    {
-        counter = new Counter ;
-        m_counter_list[key] = counter ;
-    }
+    if(m_counter_list.count(key) !=0) return NULL ;
+
+    Counter* counter = new Counter  ;
+    if(counter) m_counter_list[key] = counter ;
 
     return counter ;
 
 }
 
-Counter* CounterManager::get_counter(const std::string& rule_name,const std::string& app_name)
+Counter* CounterManager::get_counter(const string& rule_name,const string& app_name)
 {
-    std::string key ;
+    string key ;
     get_counter_key(key,rule_name.c_str(),app_name.c_str());
 
     CounterContainer::iterator it = m_counter_list.find(key) ;

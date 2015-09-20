@@ -80,7 +80,11 @@ public:
 
     Counter* get_counter(const string& rule_name,const string& app_name);
 
-    Counter* create_counter(const string& rule_name,const string& app_name);
+
+    /*
+     * @brief  create counter and init
+     */
+    Counter* create_counter(const string& rule_name,const string& app_name,const RuleConfig& config);
 
     /*
      * @brief load counter data from database
@@ -96,6 +100,7 @@ private:
     CounterManager(const CounterManager& o) ;
     CounterManager& operator=(const CounterManager& o) ;
 
+    Counter* inner_create_counter(const string& rule_name,const string& app_name) ;
 private:
     CounterContainer m_counter_list ;
 
