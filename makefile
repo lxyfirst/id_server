@@ -6,6 +6,11 @@ all:
 		make all -C $$DIR ;         \
 	done
 
+release:
+	@for DIR in $(SUBDIRS) ; do 	\
+		make release -C $$DIR ; 	\
+	done
+
 clean:
 	@for DIR in $(SUBDIRS) ; do 	\
 		make clean -C $$DIR ; 		\
