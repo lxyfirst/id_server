@@ -40,6 +40,7 @@ int UdpHandler::send_response(const sa_in_t& to_addr,int code,const char* messag
 int UdpHandler::process_packet(const udp_packet* pi)
 {
 
+    debug_log_format(get_app().logger(),"recv:%s",pi->data) ;
     if(pi->data[0] != '{') return 0 ;
     
     Json::Reader reader ;
@@ -92,7 +93,7 @@ int UdpHandler::process_action_create(const string& rule_name,const string& app_
         send_response(from_addr,-1,"system error",seq.c_str()) ;
     }
 
-    debug_log_format(get_app().logger(),"create_id rule_name:%s app_name:%s salt:%s id:%s",
+    trace_log_format(get_app().logger(),"create_id rule_name:%s app_name:%s salt:%s id:%s",
             rule_name.c_str(),app_name.c_str(),salt.c_str(),new_id.c_str() );
 
     return 0 ;

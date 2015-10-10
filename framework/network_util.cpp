@@ -139,7 +139,7 @@ int create_tcp_service(sa_in_t* addr)
     int sockfd = socket(AF_INET,SOCK_STREAM,0) ;
     if ( sockfd < 0 ) return -1 ;
     set_nonblock(sockfd) ;
-    set_addr_reuse(sockfd) ;
+    set_socket_reuse(sockfd) ;
     if( bind(sockfd,(sa_t*)addr,sizeof(sa_in_t)) !=0 )
     {
         close(sockfd) ;
@@ -161,7 +161,7 @@ int create_udp_service(sa_in_t* addr)
     int sockfd = socket(AF_INET,SOCK_DGRAM,0) ;
     if ( sockfd < 0 ) return -1 ;
     set_nonblock(sockfd) ;
-    set_addr_reuse(sockfd) ;
+    set_socket_reuse(sockfd) ;
     if( bind(sockfd,(sa_t*)addr,sizeof(sa_in_t)) !=0 )
     {
         close(sockfd) ;
