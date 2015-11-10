@@ -237,16 +237,13 @@ int application::start(int argc,char** argv)
         else if(m_sig_status == STATUS_PRE_STOP)
         {
             m_sig_status = STATUS_RUN ;
-            del_timer(&m_timer);
-            if(!m_delay_timer.is_running() ) on_delay_stop() ;
+            if(!m_delay_timer.is_running() )
+            {
+                del_timer(&m_timer);
+                on_delay_stop() ;
+                //cannot add delay timer , stop directly
+                if(!add_timer_after(&m_delay_timer,m_delay_ms) ) set_status(STATUS_STOP) ;
 
-            if(m_delay_ms < MIN_INTERVAL )
-            {
-                m_status = STATUS_STOP;
-            }
-            else
-            {
-                add_timer_after(&m_delay_timer,m_delay_ms) ;
             }
         }
 

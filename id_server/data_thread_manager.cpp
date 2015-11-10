@@ -93,13 +93,19 @@ void DataThreadManager::fini()
     for(ThreadContainer::iterator it = m_thread_list.begin();it!=m_thread_list.end();++it)
     {
         DataThread* thread = *it ;
+        if(thread) thread->stop() ;
+    }
+
+    for(ThreadContainer::iterator it = m_thread_list.begin();it!=m_thread_list.end();++it)
+    {
+        DataThread* thread = *it ;
         if(thread)
         {
-            thread->stop() ;
             thread->join() ;
             delete thread ;
         }
     }
+
 
     m_thread_list.clear() ;
 
