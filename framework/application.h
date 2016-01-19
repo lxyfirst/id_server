@@ -1,11 +1,10 @@
-/*
+/**
  * application.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef APPLICATION_H_
-#define APPLICATION_H_
+#pragma once
 
 #include <signal.h>
 #include <stdio.h>
@@ -17,6 +16,9 @@
 namespace framework
 {
 
+/**
+ * application framework
+ */
 class application
 {
 friend class base_timer ;
@@ -42,18 +44,21 @@ public:
     virtual ~application() ;
 
 public:
-    /*
+    /**
      * @brief program entry
      */
     int start(int argc,char** argv) ;
 
+    /**
+     * stop application
+     */
     void stop() ;
 
     //int8_t get_status() const{ return m_status ; } ;
     bool is_running() const { return m_status == STATUS_RUN ; } ;
     bool is_stopped() const { return m_status == STATUS_STOP; } ;
 
-    /*
+    /**
      * @brief  send signal to application , applicaton::on_signal will be called
      */
     void send_signal(int signo) ;
@@ -61,6 +66,7 @@ public:
 
     int add_timer_after(base_timer* timer,int duration_ms) ;
     int add_timer_until(base_timer* timer,int64_t expired_ms) ;
+
     void del_timer(base_timer* timer) ;
 
     base_reactor& reactor() { return m_event_engine ; } ;
@@ -70,42 +76,45 @@ public:
     int max_open_fd() const { return m_max_open_fd ; } ;
 
 protected:
-    /*
+    /**
      * @brief get version string , implemented derived class
      */
     virtual const char* version() { return "1.0" ; } ;
 
 
-    /*
-     * @brief called  when initialize , implemented derived class
+    /**
+     * @brief called  when initialized , implemented derived class
      * @return 0 on success , if failed ,application will exit
      */
     virtual int on_init() {return 0; };
 
 
-    /*
+    /**
      * @brief called when get USR1 signal , implemented derived class
      * @return 0 on success , if failed , application will exit
      */
     virtual int on_reload() { return 0 ; } ;
 
 
-    /*
+    /**
      * @brief called when quit , implemented derived class
      */
     virtual void on_fini() { };
 
-    /*
+    /**
      * @brief called when get signal , should return immediately
      */
     virtual void on_signal(int signo) ;
 
 
-    /*
-     * @brief called every minute , implemented derived class
+    /**
+     * @brief called when app timer triggered , implemented derived class
      */
     virtual void on_timer() { } ;
 
+    /**
+     * @brief called when delay stop timer triggered , implemented derived class
+     */
     virtual void on_delay_stop() { } ;
 
 protected:
@@ -181,4 +190,3 @@ private:
         signal(SIGHUP,SIG_IGN);           \
         return get_app().start(argc,argv);}
 
-#endif /* APPLICATION_H_ */

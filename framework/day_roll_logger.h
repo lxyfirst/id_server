@@ -1,18 +1,17 @@
-/*
+/**
  * day_roll_logger.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef DAY_ROLL_LOGGER_H_
-#define DAY_ROLL_LOGGER_H_
+#pragma once
 
 #include <time.h>
 
 namespace framework
 {
 
-/*
+/**
  * @brief logger file rolled by day
  */
 class day_roll_logger
@@ -43,7 +42,7 @@ public:
         MAX_IOBUF_SIZE = MAX_LINE_SIZE * 1024 ,
     };
 public:
-    /*
+    /**
      * @brief initialize the logger
      * @param [in]: prefix - logger file prefix , prefix-xxxx-xx-xx.log
      * @param [in]: log level
@@ -52,12 +51,12 @@ public:
      */
     int init(const char* prefix,int log_level,int buf_size = NONE_IOBUF_SIZE) ;
 
-    /*
+    /**
      * @brief clean up
      */
     void fini() ;
 
-    /*
+    /**
      * @brief write formatted log data
      * @param [in] log level
      * @param [in] format string
@@ -67,7 +66,7 @@ public:
     int write_string(int  log_level,const char* content) ;
     //int write_bin(int  log_level,const char* buf,int len) ;
 
-    /*
+    /**
      * @brief flush buffered data to disk
      */
     int flush() ;
@@ -140,4 +139,3 @@ private:
 
 }
 
-#endif /* DAY_ROLL_LOGGER_H_ */

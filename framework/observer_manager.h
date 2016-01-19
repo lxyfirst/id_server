@@ -1,11 +1,10 @@
-/*
+/**
  *  application.h
  *  
  *      Author: lixingyi (lxyfirst@163.com)
  */ 
-#ifndef OBSERVER_MANAGER_H_
-#define OBSERVER_MANAGER_H_
 
+#pragma once
 
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
@@ -37,6 +36,5 @@ private:
 
 }
 
-#endif
 
 

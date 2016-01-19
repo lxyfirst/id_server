@@ -1,10 +1,9 @@
-/*
+/**
  * member_function_bind.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef MEMBER_FUNCTION_BIND_H_ 
-#define MEMBER_FUNCTION_BIND_H_
+#pragma once
 
 namespace framework
 {
@@ -124,4 +123,3 @@ simple_member_func4<R,T,A1,A2,A3,A4> member_function_bind(R (T::*f)(A1,A2,A3,A4)
 
 }
 
-#endif /* SIMPLE_BIND_H_ */

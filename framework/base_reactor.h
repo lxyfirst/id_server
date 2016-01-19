@@ -1,16 +1,18 @@
-/*
+/**
  * base_reactor.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef BASE_REACTOR_H_
-#define BASE_REACTOR_H_
+#pragma once
 
 namespace framework
 {
 
 class io_handler ;
 
+/**
+ * @brief abstract class for io event reactor
+ */
 class base_reactor
 {
 public:
@@ -25,7 +27,7 @@ public:
     virtual ~base_reactor() { } ;
 
 public:
-    /*
+    /**
      * @brief register fd handler to epoll engine
      * @param [in] fd to be watched
      * @param [in] handler to callback
@@ -34,7 +36,7 @@ public:
      */
     virtual int add_handler(int fd , io_handler* handler,int event_type) =0;
 
-    /*
+    /**
      * @brief modify fd watched
      * @param [in] fd have been watched
      * @param [in] handler to callback
@@ -43,20 +45,20 @@ public:
      */
     virtual int mod_handler(int fd , io_handler* handler ,int event_type ) =0;
 
-    /*
+    /**
      * @brief remove fd watched
      * @param [in] fd have been watched
      */
     virtual void del_handler(int fd ) =0;
 
-    /*
+    /**
      * @brief get handler by fd
      * @param [in] fd have been watched
      * @return  handler pointer , NULL is not exist
      */
     virtual io_handler* get_handler(int fd) =0 ;
 
-    /*
+    /**
      * @brief watch events one time , will block msec milliseconds at most
      * @param [in] max milliseconds to wait
      * @return events count
@@ -73,4 +75,3 @@ private:
 }
 
 
-#endif /* BASE_REACTOR_H_ */

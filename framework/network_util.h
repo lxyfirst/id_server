@@ -1,11 +1,10 @@
-/*
+/**
  * network_util.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef NETWORK_UTIL_H_
-#define NETWORK_UTIL_H_
+#pragma once
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -57,6 +56,15 @@ int check_socket_event(int fd,int seconds,bool read_event = true,bool write_even
 int get_socket_option(int fd,int option_name) ;
 int set_socket_option(int fd,int option_name,int option_value) ;
 
+/**
+ * @param fd
+ * @param idle seconds , idle =0 means no keepalive
+ * @param count
+ * @param interval seconds
+ * @return : 0 on success
+ */
+int set_tcp_keepalive(int fd,int idle=60,int count=2,int interval=10) ;
+
 
 /** socket,bind,listen  */
 int create_tcp_service(sa_in_t* addr) ;
@@ -68,4 +76,3 @@ int create_unix_client(sa_un_t* remote_addr,int timeout) ;
 
 }
 
-#endif /* NETWORK_UTIL_H_ */

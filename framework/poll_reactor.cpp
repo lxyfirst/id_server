@@ -16,8 +16,7 @@
 namespace framework
 {
 
-poll_reactor::poll_reactor():m_max_count(0),m_cur_count(0),m_sort_flag(0),m_prepare_flag(0)
-    ,m_events(NULL),m_handlers(NULL)
+poll_reactor::poll_reactor():m_events(NULL),m_handlers(NULL),m_max_count(0),m_cur_count(0),m_prepare_flag(0)
 {
 
 

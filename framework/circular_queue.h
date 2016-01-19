@@ -1,24 +1,23 @@
-/*
+/**
  * circular_queue.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef CIRCULAR_QUEUE_H_
-#define CIRCULAR_QUEUE_H_
+#pragma once
 
 #include <new>
 
 namespace framework
 {
-/*
- * @brief circular queue , push elements at the head and pop elements at the tail
+/**
+ * @brief spsc circular queue , push elements at the head and pop elements at the tail
  */
 template<typename T>
 class circular_queue
 {
 public:
-    /*
+    /**
      * @brief initialize the queue , allocate space
      */
     int init(int maxsize)
@@ -32,7 +31,7 @@ public:
         return 0 ;
     } ;
 
-    /*
+    /**
      * @brief clean up
      */
     void fini()
@@ -47,22 +46,22 @@ public:
 
     } ;
 
-    /*
+    /**
      * @brief get the queue capacity size
      */
     int capacity() const { return m_maxsize ;} ;
-    /*
+    /**
      * @brief check the queue is empty
      * @return true if empty
      */
     bool empty() const { return m_front == m_back ;} ;
-    /*
+    /**
      * @brief check the queue is full
      * @return true if full
      */
     bool full() const {return (m_front +1) % m_maxsize == m_back ; } ;
 
-    /*
+    /**
      * @brief push element at the head
      */
     int push(const T& element)
@@ -73,7 +72,7 @@ public:
         return 0 ;
     }
 
-    /*
+    /**
      * @brief pop element at the tail
      */
     int pop(T& element)
@@ -85,7 +84,7 @@ public:
     }
 
 
-    /*
+    /**
      * @brief get the tail element pointer
      */
     T* back()
@@ -113,4 +112,3 @@ private:
 
 }
 
-#endif /* CIRCULAR_QUEUE_H_ */

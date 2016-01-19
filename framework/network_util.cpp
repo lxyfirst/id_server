@@ -130,6 +130,22 @@ int set_socket_option(int fd,int option_name,int option_value)
     return setsockopt(fd, SOL_SOCKET, option_name , (char*)&option_value,sizeof(option_value) ) ;
 }
 
+int set_tcp_keepalive(int fd,int idle,int count,int interval)
+{
+    int keepalive = idle >0 ? 1 : 0 ;
+    int ret = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE , (char*)&keepalive,sizeof(keepalive) ) ;
+    if ( keepalive >0 && ret == 0 )
+    {
+        setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, (char*)&idle,sizeof(idle) ) ;
+        setsockopt(fd, SOL_TCP, TCP_KEEPCNT, (char*)&count,sizeof(count) ) ;
+        setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, (char*)&interval,sizeof(interval) ) ;
+    }
+    
+    return ret ;
+
+}
+
+
 
 
 

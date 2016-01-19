@@ -1,10 +1,9 @@
-/*
- *
+/**
+ * udp_data_handler.h
  * Author : lixingyi (lxyfirst@163.com)
  */
 
-#ifndef UDP_DATA_HANDLER_H_
-#define UDP_DATA_HANDLER_H_
+#pragma once
 
 #include <errno.h>
 #include <unistd.h>
@@ -28,7 +27,7 @@ struct udp_packet
 class udp_data_handler : public io_handler
 {
 public:
-    enum { MAX_BUF_SIZE = 8192};
+    enum { MAX_BUF_SIZE = 20480};
     enum
     {
         OPTION_READALL= 0x1 << 1 ,
@@ -94,5 +93,4 @@ protected:
 
 }
 
-#endif /* udp_data_handler_H_ */
 

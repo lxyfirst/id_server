@@ -1,14 +1,12 @@
-/*
+/**
  * thread.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef THREAD_H_
-#define THREAD_H_
+#pragma once
 
 #include <stdint.h>
-
 
 namespace framework
 {
@@ -89,4 +87,3 @@ private:
 
 }
 
-#endif /* THREAD_H_ */

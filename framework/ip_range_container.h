@@ -1,10 +1,9 @@
-/*
+/**
  * ip_range_container.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef IP_RANGE_CONTAINER_H_
-#define IP_RANGE_CONTAINER_H_
+#pragma once
 
 #include <arpa/inet.h>
 #include <vector>
@@ -47,6 +46,5 @@ private:
     std::vector<ip_range_t> m_ip_list ;
 };
 
-} /* namespace framework */
+} 
 
-#endif /* ip_range_container_H_ */

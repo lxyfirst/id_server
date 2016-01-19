@@ -1,12 +1,11 @@
 
-/*
+/**
  * linked_map.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef LINKED_MAP_H
-#define LINKED_MAP_H
+#pragma once
 
 #include <map>
 #include <tr1/unordered_map>
@@ -14,8 +13,11 @@
 namespace framework
 {
 
+/**
+ * @brief hashmap with linked list
+ */
 template <typename K , typename V>
-class LinkedMap
+class linked_map
 {
 public:
     typedef K key_type ;
@@ -23,7 +25,7 @@ public:
 
     class node_type
     { 
-    friend class LinkedMap ;
+    friend class linked_map ;
     public:
         value_type& value() { return m_value ;} ;
     private:
@@ -32,13 +34,13 @@ public:
         value_type m_value ;
     } ;
 
-    //typedef std::map<key_type,node_type > node_container ;
+    typedef std::pair<key_type,node_type > map_value_type ;
     typedef std::tr1::unordered_map<key_type,node_type > node_container ;
     typedef typename node_container::iterator iterator ;
     typedef typename node_container::const_iterator const_iterator ;
 
 public:
-    LinkedMap()
+    linked_map()
     {
         m_head.m_next = m_head.m_prev = &m_head ;
     };
@@ -151,6 +153,5 @@ private:
 
 }
 
-#endif
 
 

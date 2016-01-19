@@ -1,11 +1,10 @@
-/*
+/**
  * tcp_acceptor.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef TCP_ACCEPTOR_H_
-#define TCP_ACCEPTOR_H_
+#pragma once
 
 #include <tr1/functional>
 
@@ -61,4 +60,3 @@ protected:
 
 }
 
-#endif /* TCP_ACCEPTOR_H_ */

@@ -1,11 +1,10 @@
-/*
+/**
  * string_util.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef STRING_UTIL_H_
-#define STRING_UTIL_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -61,4 +60,3 @@ int split(string_vector& dst,const char* src,int size,char sep=' ') ;
 
 }
 
-#endif /* STRING_UTIL_H_ */

@@ -1,11 +1,10 @@
-/*
+/**
  * packet_processor.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef PACKET_PROCESSOR_H_
-#define PACKET_PROCESSOR_H_
+#pragma once
 
 namespace framework
 {
@@ -56,4 +55,3 @@ public:
 
 }
 
-#endif /* PACKET_PROCESSOR_H_ */

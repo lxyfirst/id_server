@@ -1,11 +1,10 @@
-/*
+/**
  * poll_reactor.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef POLL_REACTOR_H_
-#define POLL_REACTOR_H_
+#pragma once
 
 #include <stdint.h>
 #include <poll.h>
@@ -64,15 +63,13 @@ private:
     void resort_poll_data() ;
 
 private:
-    int16_t m_max_count;
-    int16_t m_cur_count;
-    int8_t m_sort_flag ;
-    int8_t m_prepare_flag ;
     struct pollfd* m_events ;
     poll_data* m_handlers ;
+    int16_t m_max_count;
+    int16_t m_cur_count;
+    int8_t m_prepare_flag ;
 
 };
 
 }
 
-#endif /* EPOLL_REACTOR_H_ */

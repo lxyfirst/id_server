@@ -1,11 +1,10 @@
-/*
+/**
  * timer_manager.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef TIMER_MANAGER_H_
-#define TIMER_MANAGER_H_
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -157,4 +156,3 @@ private:
 
 }
 
-#endif /* TIMER_MANAGER_H_ */

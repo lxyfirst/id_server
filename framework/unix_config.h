@@ -1,11 +1,10 @@
-/*
+/**
  * unix_config.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef UNIX_CONFIG_H_
-#define UNIX_CONFIG_H_
+#pragma once
 
 namespace framework
 {
@@ -69,4 +68,3 @@ private:
 
 }
 
-#endif /* SIMPLE_CONFIG_H_ */

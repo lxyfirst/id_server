@@ -1,11 +1,10 @@
-/*
+/**
  * time_util.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef TIME_UTIL_H_
-#define TIME_UTIL_H_
+#pragma once
 
 #include <stdint.h>
 #include <time.h>
@@ -143,4 +142,3 @@ inline bool is_same_cycle(time_t first_t, time_t second_t, int cycle_seconds = S
 }
 
 
-#endif /* TIME_UTIL_H_ */

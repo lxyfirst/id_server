@@ -1,13 +1,10 @@
-/*
+/**
  * io_handler.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef IO_HANDLER_H_
-#define IO_HANDLER_H_
-
-
+#pragma once
 
 namespace framework
 {
@@ -24,7 +21,7 @@ namespace framework
     };
 
 
-/*
+/**
  * @brief  interface for event driven handler
  */
 class io_handler
@@ -36,19 +33,19 @@ public:
 
 public :
 
-    /*
+    /**
      * @brief error events callback , implemented by concrete class
      */
     virtual void on_error(int fd) = 0 ;
 
 
-    /*
+    /**
      * @brief read events callback , implemented by concrete class
      */
     virtual void on_read(int fd) = 0 ;
 
 
-    /*
+    /**
      * @brief write events callback , implemented by concrete class
      */
     virtual void on_write(int fd) = 0 ;
@@ -62,5 +59,4 @@ private:
 
 }
 
-#endif /* IO_HANDLER_H_ */
 

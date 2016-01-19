@@ -1,11 +1,10 @@
-/*
+/**
  * bidirection_hashmap.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef BIDIRECTION_HASHMAP_H_
-#define BIDIRECTION_HASHMAP_H_
+#pragma once
 
 #include <tr1/unordered_map>
 
@@ -13,6 +12,9 @@
 namespace framework
 {
 
+/**
+ * @brief didirection hashmap 
+ */
 template<typename T1,typename T2>
 class bidirection_hashmap
 {
@@ -96,4 +98,3 @@ private:
 
 }
 
-#endif /* BIDIRECTION_HASHMAP_H_ */

@@ -1,11 +1,10 @@
-/*
+/**
  * atomic_int.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef ATOMIC_INT_H_
-#define ATOMIC_INT_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -22,12 +21,12 @@ public:
     ~atomic_int() { } ;
 
 
-    /*
+    /**
      * brief atomically read value
      */
     int_type get() { return m_counter ; } ;
 
-    /*
+    /**
      * @brief atomically set value
      * @return old value
      */
@@ -74,4 +73,3 @@ typedef atomic_int<int64_t> atomic_int64 ;
 
 }
 
-#endif /* ATOMIC_INT_H_ */

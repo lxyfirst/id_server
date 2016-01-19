@@ -1,11 +1,10 @@
-/*
+/**
  * epoll_reactor.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef EPOLL_REACTOR_H_
-#define EPOLL_REACTOR_H_
+#pragma once
 
 #include "base_reactor.h"
 
@@ -14,6 +13,9 @@ namespace framework
 
 class io_handler ;
 
+/**
+ * @brief epoll reactor 
+ */
 class epoll_reactor : public base_reactor
 {
 public:
@@ -28,7 +30,7 @@ public:
     ~epoll_reactor();
 
 public:
-    /*
+    /**
      * @brief initialize , create epoll fd and alloc memory
      * @param [in] max fd slot
      * @return 0 on success , nagtive on failed
@@ -37,7 +39,7 @@ public:
 
     void fini() ;
 
-    /*
+    /**
      * @brief register fd handler to epoll engine
      * @param [in] fd to be watched
      * @param [in] handler to callback
@@ -46,7 +48,7 @@ public:
      */
     int add_handler(int fd , io_handler* handler,int event_type) ;
 
-    /*
+    /**
      * @brief modify fd watched
      * @param [in] fd have been watched
      * @param [in] handler to callback
@@ -55,14 +57,14 @@ public:
      */
     int mod_handler(int fd , io_handler* handler ,int event_type ) ;
 
-    /*
+    /**
      * @brief remove fd watched
      */
     void del_handler(int fd ) ;
 
     io_handler* get_handler(int fd)  ;
 
-    /*
+    /**
      * @brief watch events one time , will block msec milliseconds at most
      * @param [in] max milliseconds to wait
      * @return events count
@@ -84,4 +86,3 @@ private:
 
 }
 
-#endif /* EPOLL_REACTOR_H_ */

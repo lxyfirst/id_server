@@ -1,10 +1,9 @@
-/*
+/**
  * object_pool.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef FRAMEWORK_OBJECT_POOL_H_
-#define FRAMEWORK_OBJECT_POOL_H_
+#pragma once
 
 #include <set>
 #include <list>
@@ -94,4 +93,3 @@ private:
 }
 
 
-#endif /**/

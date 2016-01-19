@@ -1,11 +1,10 @@
-/*
+/**
  * tcp_data_handler.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef TCP_DATA_HANDLER_H_
-#define TCP_DATA_HANDLER_H_
+#pragma once
 
 #include "io_handler.h"
 #include "network_util.h"
@@ -25,12 +24,12 @@ public:
         int fd ;
         int timestamp ;
 
-        bool operator!=(const connection_id& o)
+        bool operator!=(const connection_id& o) const
         {
             return ( fd!=o.fd || timestamp != o.timestamp) ;
         }
 
-        bool operator==(const connection_id& o)
+        bool operator==(const connection_id& o) const
         {
             return ( fd==o.fd && timestamp == o.timestamp) ;
         }
@@ -56,6 +55,7 @@ public:
         STATUS_CLOSED = 0 , 
         STATUS_CONNECTING = 1 ,
         STATUS_CONNECTED = 2 ,
+        STATUS_CLOSING = 3 ,
     } ;
 
     //connection options
@@ -198,4 +198,3 @@ private:
 
 }
 
-#endif /* TCP_DATA_HANDLER_H_ */

@@ -1,18 +1,19 @@
-/*
+/**
  * aliased_streambuf.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef ALIASED_BUF_H_
-#define ALIASED_BUF_H_
+#pragma once
 
 #include <streambuf>
 
 namespace framework
 {
 
-//for protobuf
+/**
+ * streambuf wrapper for protobuf
+ */
 class aliased_streambuf : public std::basic_streambuf<char>
 {
 public:
@@ -130,4 +131,3 @@ protected:
 
 }
 
-#endif /* ALIASED_BUF_H_ */

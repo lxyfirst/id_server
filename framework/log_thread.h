@@ -1,10 +1,9 @@
-/*
+/**
  * log_thread.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef LOG_THREAD_H_
-#define LOG_THREAD_H_
+#pragma once
 
 #include "poll_reactor.h"
 #include "thread.h"
@@ -14,6 +13,9 @@
 namespace framework
 {
 
+/**
+ * @brief logger thread
+ */
 class log_thread: public simple_thread
 {
 public:
@@ -50,4 +52,3 @@ private:
 
 }
 
-#endif /* LOG_THREAD_H_ */

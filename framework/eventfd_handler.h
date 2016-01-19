@@ -1,10 +1,9 @@
-/*
- *
+/**
+ * eventfd_handler.h
  * Author : lixingyi (lxyfirst@163.com)
  */
 
-#ifndef EVENTFD_HANDLER_H_
-#define EVENTFD_HANDLER_H_
+#pragma once
 
 #include <tr1/functional>
 
@@ -15,6 +14,9 @@ namespace framework
 
 class base_reactor ;
 
+/**
+ * @brief eventfd handler for event notification
+ */
 class eventfd_handler : public io_handler
 {
 public:
@@ -43,5 +45,4 @@ private:
 
 }
 
-#endif 
 

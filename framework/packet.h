@@ -1,11 +1,10 @@
-/*
+/**
  * packet.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef PACKET_H_
-#define PACKET_H_
+#pragma once
 
 #include <stdint.h>
 #include <endian.h>
@@ -119,4 +118,3 @@ public:
 
 }
 
-#endif /* PACKET_H_ */

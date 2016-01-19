@@ -1,10 +1,9 @@
-/*
+/**
  * mmap_file.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef MMAP_FILE_H_
-#define MMAP_FILE_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -77,5 +76,4 @@ private:
 
 }
 
-#endif
 

@@ -1,12 +1,10 @@
-/*
+/**
  * system_util.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef SYSTEM_UTIL_H_
-#define SYSTEM_UTIL_H_
-
+#pragma once
 
 #include <stdio.h>
 #include <errno.h>
@@ -49,4 +47,3 @@ int set_uid_by_name(const char* username) ;
 int daemon_init(int nochdir,int noclose) ;
 }
 
-#endif /* SYSTEM_UTIL_H_ */

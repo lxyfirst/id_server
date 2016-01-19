@@ -1,10 +1,9 @@
-/*
+/**
  * pipe_handler.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef PIPE_HANDLER_H_
-#define PIPE_HANDLER_H_
+#pragma once
 
 #include <stdint.h>
 #include <tr1/functional>
@@ -50,4 +49,3 @@ private:
 };
 
 }
-#endif /* PIPE_HANDLER_H_ */

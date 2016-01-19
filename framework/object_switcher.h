@@ -1,18 +1,17 @@
-/*
+/**
  * object_switcher.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef OJBECT_SWITCHER_H_
-#define OJBECT_SWITCHER_H_
-
-
+#pragma once
 
 namespace framework
 {
 
-
+/**
+ * @brief object switcher for safe 
+ */
 template<typename T>
 class object_switcher
 {
@@ -36,5 +35,4 @@ private:
 
 }
 
-#endif /* IO_HANDLER_H_ */
 

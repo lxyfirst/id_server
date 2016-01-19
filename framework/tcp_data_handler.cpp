@@ -91,11 +91,12 @@ int tcp_data_handler::attach_reactor(base_reactor* reactor)
 {
     if( (m_reactor!= NULL) || (reactor==NULL) ) return -1 ;
     
-    if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_READ)!=0)
+    if(reactor->add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_WRITE)!=0)
     {
         return -2 ;
     }
     
+    m_write_flag = 1 ;
     m_reactor = reactor ;
     
     return 0 ;
@@ -143,6 +144,18 @@ void tcp_data_handler::fini(bool release)
 {
     inner_fini(release) ;
     update_status(STATUS_CLOSED) ;
+    /*
+    if(m_write_flag==0) 
+    {
+        inner_fini(release) ;
+        update_status(STATUS_CLOSED) ;
+    }
+    else
+    {
+        shutdown(m_id.fd,SHUT_RD) ;
+        update_status(STATUS_CLOSING) ;
+    }
+    */
 
 }
 
@@ -224,6 +237,7 @@ void tcp_data_handler::on_read(int fd)
 
 void tcp_data_handler::on_write(int fd)
 {
+    //active connect event
     if(m_connect_status == STATUS_CONNECTING) 
     {
         m_write_flag = 0 ;
@@ -232,6 +246,7 @@ void tcp_data_handler::on_write(int fd)
         return ;
     }
 
+    //send buffered data
     if(m_sbuf.data_size() > 0 )
     {
         int to_send = m_sbuf.data_size() > m_max_write_size ? m_max_write_size : m_sbuf.data_size();
@@ -256,11 +271,17 @@ void tcp_data_handler::on_write(int fd)
 
     if(m_sbuf.data_size() == 0)
     {
-
         if(m_reactor && (m_write_flag == 1) )
         {
             m_reactor->mod_handler(fd,this,base_reactor::EVENT_READ) ;
             m_write_flag = 0 ;
+        }
+
+        //all data has been send , try fini again
+        if(m_connect_status == STATUS_CLOSING)
+        {
+            fini() ;
+            return ;
         }
 
     }
