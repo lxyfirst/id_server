@@ -1,11 +1,10 @@
 
-/*
+/**
  *
  * Author : lixingyi (lxyfirst@163.com)
  */
 
-#ifndef LUA_MANAGER_H_
-#define LUA_MANAGER_H_
+#pragma once
 
 #include <string>
 #include <time.h>
@@ -79,7 +78,4 @@ public:
 private:
     struct tm tm_now ;
 };
-
-
-#endif
 

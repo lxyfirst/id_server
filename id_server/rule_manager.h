@@ -1,11 +1,10 @@
-/*
+/**
  * rule_manager.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef RULE_MANAGER_H_
-#define RULE_MANAGER_H_
+#pragma once
 
 #include <stdint.h>
 #include <string>
@@ -73,7 +72,3 @@ private:
     int m_offset ;
 };
 
-
-
-
-#endif /*  */

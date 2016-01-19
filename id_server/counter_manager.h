@@ -1,11 +1,10 @@
-/*
+/**
  * counter_manager.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef COUNTER_MANAGER_H_
-#define COUNTER_MANAGER_H_
+#pragma once
 
 #include <string>
 #include <tr1/unordered_map>
@@ -31,23 +30,23 @@ class Counter
 public:
     Counter() ;
     ~Counter() ;
-    /*
+    /**
      * @brief load data from database
      */
     void load(const CounterData& data) ;
 
-    /*
+    /**
      * @brief init data
      */
     void init(const string& rule_name,const string& app_name,const RuleConfig& rule_config);
 
-    /*
+    /**
      * @brief create auto increment counter
      * @return new counter
      */
     int generate_counter() ;
 
-    /*
+    /**
      * @brief get timestamp never rollback
      * @return timestamp
      */
@@ -56,7 +55,7 @@ public:
 
     const CounterData& data() { return m_data ; } ;
 
-     /*
+     /**
      * @brief save data and auto try again if failed
      */
     void async_save(framework::timer_manager* manager = NULL) ;
@@ -81,12 +80,12 @@ public:
     Counter* get_counter(const string& rule_name,const string& app_name);
 
 
-    /*
+    /**
      * @brief  create counter and init
      */
     Counter* create_counter(const string& rule_name,const string& app_name,const RuleConfig& config);
 
-    /*
+    /**
      * @brief load counter data from database
      */
     Counter* load_counter(const CounterData& data) ;
@@ -106,4 +105,3 @@ private:
 
 };
 
-#endif /*  */

@@ -1,4 +1,4 @@
-/*
+/**
  * udp_handler.cpp
  * Author: lixingyi (lxyfirst@163.com)
  */
@@ -16,13 +16,11 @@ using namespace framework ;
 
 UdpHandler::UdpHandler()
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 UdpHandler::~UdpHandler()
 {
-    // TODO Auto-generated destructor stub
 }
 
 

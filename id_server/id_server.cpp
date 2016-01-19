@@ -1,4 +1,4 @@
-/*
+/**
  * id_server.cpp
  *
  *      Author: lixingyi (lxyfirst@163.com)
@@ -18,13 +18,11 @@ using namespace framework ;
 
 IdServer::IdServer()
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 IdServer::~IdServer()
 {
-    // TODO Auto-generated destructor stub
 }
 
 

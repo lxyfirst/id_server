@@ -1,4 +1,4 @@
-/*
+/**
  * data_thread.cpp
  * Author: lixingyi (lxyfirst@163.com)
  */
@@ -16,13 +16,11 @@ using namespace framework ;
 DataThread::DataThread(log_thread& logger,const ThreadConfig& config):
         m_logger(logger),m_config(config),m_now(0)
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 DataThread::~DataThread()
 {
-    // TODO Auto-generated destructor stub
 }
 
 int DataThread::on_init()

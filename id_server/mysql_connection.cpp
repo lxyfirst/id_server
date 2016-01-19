@@ -1,4 +1,4 @@
-/*
+/**
  * MysqlConnection.cpp
  *
  *      Author: lixingyi (lxyfirst@163.com)

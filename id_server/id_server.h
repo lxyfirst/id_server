@@ -1,11 +1,10 @@
-/*
+/**
  * id_server.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef ID_SERVER_H_
-#define ID_SERVER_H_
+#pragma once
 
 #include <set>
 #include <tr1/unordered_map>
@@ -82,4 +81,3 @@ private:
 
 DECLARE_APPLICATION_INSTANCE(IdServer) ;
 
-#endif /* */

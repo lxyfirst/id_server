@@ -1,10 +1,9 @@
-/*
+/**
  * data_thread_manager.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef DATA_THREAD_MANAGER_H_
-#define DATA_THREAD_MANAGER_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -14,6 +13,9 @@
 
 int load_counter_data(CounterManager& counter_manager,int node_offset,const ThreadConfig& config) ;
 
+/**
+ * @brief data thread manager
+ */
 class DataThreadManager
 {
 public:
@@ -26,7 +28,7 @@ public:
 
     void fini() ;
 
-    /*
+    /**
      * @brief save data to database
      */
     int async_save(const CounterData& data);
@@ -37,4 +39,3 @@ private:
     int m_thread_count ;
 };
 
-#endif /* DATA_THREAD_MANAGER_H_ */

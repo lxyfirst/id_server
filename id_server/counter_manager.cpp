@@ -1,4 +1,4 @@
-/*
+/**
  * counter_manager.cpp
  *
  *      Author: lixingyi (lxyfirst@163.com)

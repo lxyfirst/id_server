@@ -1,4 +1,4 @@
-/*
+/**
  * rule_manager.cpp
  *
  *      Author: lixingyi (lxyfirst@163.com)
@@ -8,13 +8,11 @@
 
 RuleManager::RuleManager():m_step(0),m_offset(0)
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 RuleManager::~RuleManager()
 {
-    // TODO Auto-generated destructor stub
 }
 
 int RuleManager::init(int offset,int step)

@@ -1,10 +1,9 @@
-/*
+/**
  * data_thread.h
  * Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef DATA_THREAD_H_
-#define DATA_THREAD_H_
+#pragma once
 
 #include <string>
 #include <tr1/unordered_map>
@@ -35,7 +34,7 @@ public:
     DataThread(framework::log_thread& logger,const ThreadConfig& config);
     virtual ~DataThread();
 
-    /*
+    /**
      *@brief  called by main thread
      *@return 0 on success , else return -1
      */
@@ -61,4 +60,3 @@ private:
 
 };
 
-#endif /* DATA_THREAD_H_ */

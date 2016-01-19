@@ -1,11 +1,10 @@
-/*
+/**
  * MysqlConnection.h
  *
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#ifndef MYSQL_CONNECTION_H_
-#define MYSQL_CONNECTION_H_
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -15,13 +14,16 @@
 bool have_escape_char(const char* data,int size) ;
 
 
+/**
+ * @brief mysql wrapper class
+ */
 class MysqlConnection
 {
 public:
     MysqlConnection():m_result(NULL),m_connected(0) {  } ;
     ~MysqlConnection() { fini() ; } ;
 
-    /*
+    /**
      * @brief connect to mysql
      * @param [in] mysql hostname , socket file must begin with '/'
      * @param [in] username
@@ -30,12 +32,13 @@ public:
      * @return 0 on success , -1 on failure
      */
     int init(const char* host,const char* user,const char* password,int port = 3306) ;
-    /*
+
+    /**
      * @brief close mysql connection
      */
     void fini() ;
 
-    /*
+    /**
      * @brief choose database
      * @param [in] database name
      * @return 0 on success , -1 on failure
@@ -53,7 +56,7 @@ public:
     }
 
 
-    /*
+    /**
      * @brief get mysql last errno
      */
     int get_errno()
@@ -62,13 +65,14 @@ public:
     }
 
     bool connected() const { return m_connected != 0 ; } ;
+
     int ping()
     {
         if(m_connected == 0 ) return -1 ;
         return mysql_ping(&m_mysql) ;
     }
 
-    /*
+    /**
      * @brief exec sql statement , result will be hold internally
      * @param [in] sql statement
      * @return 0 on success , -1 on failure
@@ -128,5 +132,3 @@ private:
     int m_connected ;
 };
 
-
-#endif /* MYSQL_CONNECTION_H_ */
