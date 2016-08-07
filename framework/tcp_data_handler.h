@@ -56,6 +56,7 @@ public:
         STATUS_CONNECTING = 1 ,
         STATUS_CONNECTED = 2 ,
         STATUS_CLOSING = 3 ,
+        STATUS_SIZE = 4 ,
     } ;
 
     //connection options
@@ -149,11 +150,16 @@ protected:
      * @brief called after connection established 
      */
     virtual void on_connected() { } ;
-    
+
     /*
-     * @brief called after connection closed actively or passively
+     * @brief called before connection closed
      */
-    virtual void on_closed(int error_type,int error_no) { } ;
+    virtual void on_disconnect(int error_type) {} ;
+
+    /*
+     * @brief called after connection closed
+     */
+    virtual void on_closed() { } ;
 
     /*
      * @brief get packet info , implemented by concrete class
@@ -178,7 +184,7 @@ private:
     virtual void on_error(int fd) ;
 
     void handle_error(int error_type) ;
-    void update_status(int status,int error_type = ERROR_TYPE_NONE,int errno_no = 0) ;
+    void update_status(int status,int error_type = ERROR_TYPE_NONE) ;
     void inner_fini(bool release) ;
     
 private:

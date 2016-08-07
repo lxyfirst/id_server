@@ -214,6 +214,29 @@ int split(string_vector& dst,const char* src,int size,char sep)
 
 }
 
+int split(string_vector& dst,const char* src,int size,const char* sep,bool ignore_empty) 
+{
+    int sep_size = strlen(sep) ;
+    if ( sep_size < 1 || sep_size > size ) return 0 ;
+    
+    std::string item ;
+    const char* end = src + size ;
+    dst.clear() ;
+    while(end > src)    
+    {
+        const char* match = strstr(src,sep) ;
+        if (match == NULL ) match = end ;
+        if ( match > src || !ignore_empty )
+        {
+            item.assign(src,match - src) ;
+            dst.push_back(item) ;
+        }
+        src = match + sep_size ;
+    }
+
+    return dst.size() ;
+}
+
 
 std::string& int2str(std::string& str,long int value)
 {

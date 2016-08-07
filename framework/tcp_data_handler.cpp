@@ -82,7 +82,7 @@ int tcp_data_handler::init(base_reactor* reactor,int fd)
     m_id.timestamp = time(0) ;
 
     update_status(STATUS_CONNECTED);
-    
+
 
     return 0 ;
 }
@@ -117,11 +117,7 @@ void tcp_data_handler::inner_fini(bool release)
 {
     if(m_id.fd >= 0 )
     {
-        if(m_reactor) 
-        {
-            m_reactor->del_handler(m_id.fd) ;
-            m_reactor = NULL ;
-        }
+        detach_reactor() ;
         close(m_id.fd) ;
         m_id.fd = -1 ;
         m_id.timestamp = 0 ;
@@ -142,6 +138,7 @@ void tcp_data_handler::inner_fini(bool release)
 
 void tcp_data_handler::fini(bool release)
 {
+    update_status(STATUS_CLOSING) ;
     inner_fini(release) ;
     update_status(STATUS_CLOSED) ;
     /*
@@ -278,11 +275,11 @@ void tcp_data_handler::on_write(int fd)
         }
 
         //all data has been send , try fini again
-        if(m_connect_status == STATUS_CLOSING)
-        {
-            fini() ;
-            return ;
-        }
+        //if(m_connect_status == STATUS_CLOSING)
+        //{
+        //    fini() ;
+        //    return ;
+        //}
 
     }
 
@@ -366,27 +363,37 @@ int tcp_data_handler::send( packet *p,int delay_flag)
 void tcp_data_handler::handle_error(int error_type)
 {
     //on_event(error_type) ;
-    int error_no = get_errno() ;
+    update_status(STATUS_CLOSING,error_type);
     inner_fini(false) ;
-    update_status(STATUS_CLOSED,error_type,error_no);
+    update_status(STATUS_CLOSED,error_type);
 
 }
 
-void tcp_data_handler::update_status(int status,int error_type,int error_no)
+void tcp_data_handler::update_status(int status,int error_type)
 {
+    static const bool STATUS_FSM[STATUS_SIZE][STATUS_SIZE] = {
+            {false,true,true,false},
+            {true,false,true,true},
+            {true,false,false,true},
+            {true,false,false,false},
+    };
+
+    if(status < 0 || status >= STATUS_SIZE || !STATUS_FSM[m_connect_status][status])  return ;
+
     int old_status = m_connect_status ;
     m_connect_status = status ;
-    if(old_status != STATUS_CONNECTED && status == STATUS_CONNECTED )
+    switch(status)
     {
+    case STATUS_CONNECTED:
         on_connected() ;
         return ;
-    }
-    else if( old_status != STATUS_CLOSED && status == STATUS_CLOSED )
-    {
-        on_closed(error_type,error_no) ;
+    case STATUS_CLOSING:
+        if(old_status == STATUS_CONNECTED) on_disconnect(error_type) ;
+        return ;
+    case STATUS_CLOSED :
+        on_closed() ;
         return ;
     }
-    
 
 }
 
@@ -395,7 +402,7 @@ int tcp_data_handler::get_sock_addr(sa_in_t* addr) const
 {
     if(m_id.fd < 0 ) return -1 ;
     socklen_t addr_size = sizeof(*addr) ;
-    return getsockname(m_id.fd,(struct sockaddr*)addr,&addr_size) ;
+    return getsockname(m_id.fd,(sa_t*)addr,&addr_size) ;
 
 }
 
@@ -404,7 +411,7 @@ int tcp_data_handler::get_remote_addr(char* str_addr,int size)  const
     if(m_id.fd < 0 ) return -1 ;
     sa_in_t addr ;
     socklen_t addr_size = sizeof(addr) ;
-    getpeername(m_id.fd,(struct sockaddr*)&addr,&addr_size) ;
+    getpeername(m_id.fd,(sa_t*)&addr,&addr_size) ;
     inet_ntop(AF_INET,(const void*)&addr.sin_addr,str_addr,size) ;
 
     return 0 ;
@@ -414,7 +421,7 @@ int tcp_data_handler::get_remote_addr(sa_in_t* addr) const
 {
     if(m_id.fd < 0 ) return -1 ;
     socklen_t addr_size = sizeof(*addr) ;
-    return getpeername(m_id.fd,(struct sockaddr*)addr,&addr_size) ;
+    return getpeername(m_id.fd,(sa_t*)addr,&addr_size) ;
 }
 
 void tcp_data_handler::set_option(int options,bool flag)

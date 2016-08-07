@@ -47,9 +47,8 @@ public:
      * @brief disconnect event callllback , implemented by concrete class
      * @param [in] connection pointer
      * @param [in] io_error_type
-     * @param [in] socket errno
      */
-    virtual void on_closed(tcp_connection* conn,int error_type,int error_no) = 0 ;
+    virtual void on_closed(tcp_connection* conn,int error_type) = 0 ;
 
 };
 

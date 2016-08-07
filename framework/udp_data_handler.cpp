@@ -14,7 +14,7 @@
 namespace framework
 {
 
-udp_data_handler::udp_data_handler():m_reactor(NULL),m_fd(-1),m_options(OPTION_READALL)
+udp_data_handler::udp_data_handler():m_reactor(NULL),m_fd(-1),m_options(0)
 {
 }
 
@@ -70,7 +70,7 @@ void udp_data_handler::on_read(int fd)
     do
     {
         socklen_t  addrlen = sizeof(p->addr);
-        p->data_size = recvfrom(fd,p->data,UDP_RECV_SIZE,0,(sockaddr*)&p->addr,&addrlen) ;
+        p->data_size = recvfrom(fd,p->data,UDP_RECV_SIZE,0,(sa_t*)&p->addr,&addrlen) ;
         if(p->data_size <= 0 )
         {
             if (errno != EAGAIN &&  errno != EINTR)
@@ -108,7 +108,7 @@ void udp_data_handler::on_event(int type)
 int udp_data_handler::send(const sa_in_t* to_addr,const char* data,int size) 
 {
     socklen_t addrlen = sizeof(sa_in_t) ;
-    if( sendto(m_fd,data,size,0,(const struct sockaddr*)to_addr,addrlen)==size) return 0;
+    if( sendto(m_fd,data,size,0,(const sa_t*)to_addr,addrlen)==size) return 0;
     return -1 ;
 }
 

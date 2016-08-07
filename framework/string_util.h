@@ -56,6 +56,7 @@ typedef std::vector<std::string> string_vector ;
  * @return  count
  */
 int split(string_vector& dst,const char* src,int size,char sep=' ') ;
+int split(string_vector& dst,const char* src,int size,const char* sep,bool ignore_empty=true) ;
 
 
 }

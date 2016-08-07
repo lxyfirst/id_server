@@ -82,7 +82,7 @@ int UdpHandler::process_action_create(const string& rule_name,const string& app_
 {
     std::string new_id ;
 
-    if( get_app().create_id(new_id,rule_name,app_name,salt)== 0 && (new_id.size() > 1) )
+    if( get_app().create_id(new_id,rule_name,app_name,salt)== 0 && (new_id.size() > 0) )
     {
         send_response(from_addr,0,"success",seq.c_str(),new_id.c_str()) ;
     }
