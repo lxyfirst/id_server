@@ -40,8 +40,11 @@ void eventfd_handler::fini()
 {
     if(m_reactor) m_reactor->del_handler(m_event_fd) ;
 
-    close(m_event_fd) ;
-    m_event_fd = -1 ;
+    if(m_event_fd >0)
+    {
+        close(m_event_fd) ;
+        m_event_fd = -1 ;
+    }
 }
 
 
