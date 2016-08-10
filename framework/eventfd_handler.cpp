@@ -55,8 +55,8 @@ int eventfd_handler::notify(int64_t v)
 
 void eventfd_handler::on_read(int fd)
 {
-    static int64_t v ;
-    read(m_event_fd,(char*)v,sizeof(v)) ;
+    int64_t v ;
+    read(m_event_fd,(char*)&v,sizeof(v)) ;
     m_callback(v) ;
 }
 
