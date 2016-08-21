@@ -32,24 +32,17 @@ public:
     enum
     {
         MAX_PREFIX_SIZE = 1024 ,
-        MAX_LINE_SIZE = 4096 ,
+        MAX_LINE_SIZE = 2048 ,
     };
 
-    enum
-    {
-        NONE_IOBUF_SIZE = 0 ,
-        MIN_IOBUF_SIZE = MAX_LINE_SIZE ,
-        MAX_IOBUF_SIZE = MAX_LINE_SIZE * 1024 ,
-    };
 public:
     /**
      * @brief initialize the logger
      * @param [in]: prefix - logger file prefix , prefix-xxxx-xx-xx.log
      * @param [in]: log level
-     * @param [in]: buffer size , if < MIN_IOBUF_SIZE , means no buffer
      * @return 0 if success
      */
-    int init(const char* prefix,int log_level,int buf_size = NONE_IOBUF_SIZE) ;
+    int init(const char* prefix,int log_level) ;
 
     /**
      * @brief clean up
@@ -60,16 +53,14 @@ public:
      * @brief write formatted log data
      * @param [in] log level
      * @param [in] format string
-     * @param [in] data
+     * @param [in] write data size
      */
-    int write_format(int  log_level,const char* fmt,...) ;
-    int write_string(int  log_level,const char* content) ;
-    //int write_bin(int  log_level,const char* buf,int len) ;
+    int write_format(int log_level,const char* fmt,...) ;
 
-    /**
-     * @brief flush buffered data to disk
-     */
-    int flush() ;
+    int write_string(int log_level,const char* content)
+    {
+        return this->write_format(log_level,"%s",content) ;
+    }
 
     short get_level() { return m_level ; } ;
     const char* get_prefix() { return m_prefix ; } ;
@@ -83,26 +74,15 @@ private:
     day_roll_logger& operator=(const day_roll_logger&) ;
 
 private:
-
-    typedef struct
-    {
-        int size ;
-        int pos ;
-        char data[0] ;
-    } memory_buffer ;
-
-private:
     int prepare() ;
 
 private:
+    struct tm m_now ;
     int m_fd ;
     int m_filedate ;
-    short m_level ;
-    short m_delay ;
-    memory_buffer* m_buf ;
+    char m_level ;
     char m_prefix[MAX_PREFIX_SIZE] ;
-    struct tm m_now ;
-
+    char m_buf[MAX_LINE_SIZE] ;
 
 };
 
