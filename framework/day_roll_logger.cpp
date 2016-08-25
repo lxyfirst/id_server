@@ -28,7 +28,8 @@ static const char* log_level_str[] =
 
 day_roll_logger::day_roll_logger():m_fd(-1),m_filedate(0)
 {
-    //memset(m_prefix,0,sizeof(m_prefix)) ;
+    memset(m_prefix,0,sizeof(m_prefix)) ;
+    memset(m_buf,0,sizeof(m_buf)) ;
 
 }
 
@@ -59,7 +60,6 @@ void day_roll_logger::fini()
         m_fd = -1 ;
         m_level = LOG_LEVEL_NONE ;
         m_filedate = 0 ;
-        m_prefix[0] = '\0' ;
 
     }
 
@@ -75,7 +75,7 @@ int day_roll_logger::prepare()
     if (m_filedate != curdate )
     {
         if(strcmp(m_prefix,"/dev/null")==0)  return 0 ;
-        char filename[MAX_PREFIX_SIZE*2] = {0} ;
+        char filename[MAX_PREFIX_SIZE + 64 ] = {0} ;
         snprintf(filename,sizeof(filename),"%s.%04d%02d%02d.log",
             m_prefix ,m_now.tm_year,m_now.tm_mon,m_now.tm_mday) ;
         int fd = open(filename,O_APPEND|O_WRONLY|O_CREAT,0777) ;
@@ -98,8 +98,8 @@ int day_roll_logger::write_format(int ll,const char* fmt,...)
 
     if ( prepare() != 0 ) return -1 ;
 
-    int head_size = sprintf(m_buf ,"%04d-%02d-%02d %02d:%02d:%02d,%s," ,
-            m_now.tm_year,m_now.tm_mon,m_now.tm_mday,m_now.tm_hour,m_now.tm_min,m_now.tm_sec,
+    int head_size = sprintf(m_buf ,"%02d-%02d %02d:%02d:%02d|%s|" ,
+            m_now.tm_mon,m_now.tm_mday,m_now.tm_hour,m_now.tm_min,m_now.tm_sec,
             log_level_str[ll] ) ;
 
     if(head_size < 0 ) return -2 ;
@@ -110,7 +110,7 @@ int day_roll_logger::write_format(int ll,const char* fmt,...)
     int content_size = vsnprintf(m_buf + head_size,writable_size,fmt,ap) ;
     va_end(ap);
 
-    if(content_size < 1 ) return -2 ;
+    if(content_size < 0 ) return -2 ;
     else if ( content_size >= writable_size ) content_size = writable_size -1 ;
 
     content_size += head_size ;
