@@ -72,6 +72,7 @@ int LuaManager::init()
     luaopen_base(m_lua);
     luaopen_string(m_lua);
     luaopen_os(m_lua) ;
+    luaopen_math(m_lua) ;
 
     //lua_tinker::class_add<LuaManager>(m_lua, "LuaManager");
     //lua_tinker::class_def<LuaManager>(m_lua, "register_handler", &LuaManager::register_handler);

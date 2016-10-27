@@ -1,4 +1,4 @@
-/**
+/*
  * MysqlConnection.cpp
  *
  *      Author: lixingyi (lxyfirst@163.com)
@@ -193,12 +193,14 @@ void MysqlConnection::fini()
 
 int MysqlConnection::exec_format(const char* fmt,...)
 {
-    char buf_data[4094] = {0} ;
+    char buf_data[2048]  ;
+    buf_data[sizeof(buf_data)-1] = '\0' ;
+
     va_list ap ;
     va_start(ap, fmt);
     int length = vsnprintf(buf_data,sizeof(buf_data),fmt,ap) ;
     va_end(ap);
-    if(length < 1 ) return -1 ;
+    if(length < 1 || length >= sizeof(buf_data)-1 ) return -1 ;
 
     return exec(buf_data) ;
 }

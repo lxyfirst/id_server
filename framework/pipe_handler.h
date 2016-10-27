@@ -35,7 +35,6 @@ public:
      * @return: 0 on success
      */
     int send_pipe_message(const packet_info* msg) ;
-    int send_pipe_message(const char* data,int size) ;
 
 protected:
     void on_read(int fd) ;

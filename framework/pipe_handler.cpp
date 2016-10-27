@@ -97,15 +97,10 @@ void pipe_handler::on_error(int fd)
 
 int pipe_handler::send_pipe_message(const packet_info* msg)
 {
-    if( write(m_pipe_fd,msg,sizeof(*msg)) == sizeof(*msg) ) return 0 ;
+    if( write(m_pipe_fd,(void*)msg,sizeof(*msg)) == sizeof(*msg) ) return 0 ;
     return -1 ;
 }
 
-int pipe_handler::send_pipe_message(const char* data,int size)
-{
-    if( write(m_pipe_fd,data,size) == size ) return 0 ;
-    return -1 ;
-}
 
 }
 

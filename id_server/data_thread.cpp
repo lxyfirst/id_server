@@ -93,10 +93,12 @@ int DataThread::async_save(const CounterData& data)
 void DataThread::on_event(int64_t v)
 {
     char  sql[1024]  ;
+    sql[sizeof(sql)-1] = '\0' ;
+
     CounterData data ;
     while( m_queue.pop(data) == 0 )
     {
-        snprintf(sql,sizeof(sql),
+        snprintf(sql,sizeof(sql)-1,
             "replace into counter set rule_name='%s',app_name='%s',node_offset=%d,counter=%d,update_time=%d",
             data.rule_name.c_str(),data.app_name.c_str(),data.node_offset,data.saved_counter,data.update_time ) ;
 

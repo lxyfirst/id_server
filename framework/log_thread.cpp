@@ -141,16 +141,19 @@ int log_thread::write_format(int ll,const char* fmt,...)
     char* buf = new char[day_roll_logger::MAX_LINE_SIZE] ;
     if(buf == NULL) return -1 ;
 
+    const int WRITABLE_SIZE = day_roll_logger::MAX_LINE_SIZE-1 ;
     va_list ap ;
     va_start(ap, fmt);
-    int length = vsnprintf(buf,day_roll_logger::MAX_LINE_SIZE-1,fmt,ap) ;
+    int length = vsnprintf(buf,WRITABLE_SIZE,fmt,ap) ;
     va_end(ap);
+
+    if(length < 0 ) return -2 ;
+    else if ( length >= WRITABLE_SIZE ) length = WRITABLE_SIZE -1 ;
 
     if( buf[length-1] !='\n')
     {
         buf[length]= '\n' ;
-        buf[length+1]= '\0' ;
-        ++length ;
+        buf[++length]= '\0' ;
     }
 
     packet_info msg = {0} ;
