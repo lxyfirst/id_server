@@ -11,18 +11,28 @@
 namespace framework
 {
 
-class thread
+class simple_thread
 {
 public:
-    thread():m_tid(0) { } ;
-    virtual ~thread() { } ;
+    enum
+    {
+        STATUS_STOPPED = 0 ,
+        STATUS_RUNNING = 1 ,
+    };
 
 public:
+    simple_thread():m_tid(0),m_status(STATUS_STOPPED) { } ;
+    virtual ~simple_thread() { } ;
     /*
      * @brief create new thread and run
      * @return 0 on success
      */
     int start() ;
+
+    /*
+     * @brief stop thread
+     */
+    inline void stop() { m_status = STATUS_STOPPED ; };
 
     /*
      * @brief join thread
@@ -33,35 +43,11 @@ public:
      * @brief thread id
      */
     int64_t id() const { return m_tid ; } ;
-protected:
-    /*
-     * @brief new thread callback , implemented by concrete class
-     */
-    virtual void run() = 0 ;
 
-private:
-    thread(const thread& o) ;
-    thread& operator=(const thread& o) ;
 
-private:
-    static void* thread_entry(void* arg) ;
+    inline bool is_run() { return m_status == STATUS_RUNNING ; };
 
-private:
-    int64_t m_tid ;
-};
-
-class simple_thread : public thread
-{
-public:
-    simple_thread():m_status(0) { } ;
-    virtual ~simple_thread() { } ;
-
-    /*
-     * @brief stop thread
-     */
-    inline void stop() { m_status = 0 ; };
-
-    inline bool is_run() { return m_status == 1 ; };
+    static simple_thread* current_thread() ;
 protected:
     /*
      * @brief called before run loop
@@ -79,9 +65,14 @@ protected:
      */
     virtual void run_once() = 0 ;
 
+    /*
+     * @brief  thread tag id , implemented by concrete class
+     */
+    virtual int tag_id()  { return 0 ; } ;
 private:
-    void run() ;
+    static void* thread_entry(void* arg) ;
 private:
+    int64_t m_tid ;
     volatile int m_status ;
 };
 

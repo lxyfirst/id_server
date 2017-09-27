@@ -247,7 +247,19 @@ std::string& int2str(std::string& str,long int value)
 }
 
 
+int hash(const char *str,int size)
+{
+    // BKDR Hash Function
+    static const int seed = 131;
+    unsigned int hash = 0;
+    const char* end = str + size ;
+    while (str != end)
+    {
+        hash = hash * seed + (*str++);
+    }
 
+    return (hash & 0x7FFFFFFF);
+}
 
 
 void md5_init(md5_context *ctx)

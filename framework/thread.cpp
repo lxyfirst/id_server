@@ -13,7 +13,7 @@
 namespace framework
 {
 
-int thread::start()
+int simple_thread::start()
 {
     if ( m_tid != 0 ) return -1 ;
 
@@ -34,7 +34,7 @@ int thread::start()
 
 
 
-void thread::join()
+void simple_thread::join()
 {
     if ( m_tid != 0 )
     {
@@ -45,22 +45,32 @@ void thread::join()
 
 }
 
-void* thread::thread_entry (void* arg)
+static thread_local simple_thread* cur_thread = NULL ;
+void* simple_thread::thread_entry(void* arg)
 {
-    thread* cur_thread = (thread*)arg;
-    cur_thread->run() ;
+    cur_thread = (simple_thread*)arg;
+
+    cur_thread->m_status = STATUS_RUNNING ;
+    if( cur_thread->on_init() != 0 )
+    {
+        return NULL;
+    }
+
+    while(cur_thread->m_status == STATUS_RUNNING)
+    {
+        cur_thread->run_once() ;
+    }
+
+    cur_thread->on_fini() ;
+
     return NULL ;
 }
 
-
-void simple_thread::run()
+simple_thread* simple_thread::current_thread()
 {
-    m_status = 1 ;
-    if( on_init() != 0 ) return ;
-    while(m_status == 1) run_once() ;
-
-    on_fini() ;
+    return cur_thread ;
 }
+
 
 
 }

@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <functional>
 
 
 namespace framework
@@ -21,10 +22,12 @@ class timer_manager  ;
 class base_timer
 {
 friend class timer_manager ;
+public:
+    typedef std::function<void(timer_manager*)> callback_type ;
 
 public:
     base_timer() : m_next(NULL),m_prev(NULL),m_expired(0) { } ;
-    virtual ~base_timer() { if(m_prev && m_next) base_timer_remove(this);} ;
+    ~base_timer() { if(m_prev && m_next) base_timer_remove(this);} ;
 
     /*
      * @brief get timer counter
@@ -43,15 +46,25 @@ public:
         return -1 ;
     } ;
 
+    void set_callback(const callback_type& callback) 
+    {
+        m_callback = callback ;
+    }
+
+    template<typename T>
+    void set_callback(T* obj,void (T::*callback)(timer_manager* manager) )
+    {
+        m_callback = std::bind(callback,obj,std::placeholders::_1) ;
+    }
+
 
     bool is_running() { return (m_next || m_prev) ; } ;
 
 protected:
     /*
-     * @brief callback implemented by concrete class
-     * called when timer expired
+     * @brief callback , called when timer expired
      */
-    virtual void on_timeout(timer_manager* manager)  { abort(); } ;
+    void on_timeout(timer_manager* manager)  { m_callback(manager); } ;
 
 private:
     static void base_timer_insert(base_timer* prev,base_timer* curr,base_timer* next);
@@ -61,22 +74,9 @@ private:
     base_timer* m_next ;
     base_timer* m_prev ;
     int64_t m_expired ;
+    callback_type m_callback ;
 } ;
 
-template<typename T,void (T::*callback)(timer_manager* manager) =&T::on_timeout>
-class template_timer : public base_timer
-{
-public:
-    explicit template_timer(T* owner = NULL ):m_owner(owner) { } ;
-
-    void set_owner(T* owner) { m_owner = owner ; } ;
-
-protected:
-    virtual void on_timeout(timer_manager* manager) { (m_owner->*callback)(manager) ;} ;
-
-private:
-    T* m_owner ;
-};
 
 class timer_manager
 {

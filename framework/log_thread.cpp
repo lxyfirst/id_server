@@ -4,10 +4,10 @@
  */
 
 #include <unistd.h>
+#include <functional>
 
 #include "system_util.h"
 #include "network_util.h"
-#include "member_function_bind.h"
 #include "packet.h"
 
 #include "log_thread.h"
@@ -37,7 +37,7 @@ int log_thread::on_init()
         error_return(-1,"create pipe failed") ;
     }
 
-    pipe_handler::callback_type callback = member_function_bind(&log_thread::on_pipe_message,this) ;
+    pipe_handler::callback_type callback = std::bind(&log_thread::on_pipe_message,this,std::placeholders::_1) ;
     if(m_handler.init(m_reactor,pipe_fd[1],callback )!=0 )
     {
         error_return(-1,"init pipe failed") ;

@@ -41,7 +41,7 @@ public:
      * @brief create listen socket and add to reactor
      * @return 0 if success
      */
-    int init(base_reactor* reactor,const char* host,int port) ;
+    int init(base_reactor& reactor,const char* host,int port) ;
 
 
     void fini() ;

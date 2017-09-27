@@ -32,6 +32,7 @@ public:
 
     void fini() ;
     /*
+     @ @brief send packet_info message to pipe 
      * @return: 0 on success
      */
     int send_pipe_message(const packet_info* msg) ;

@@ -18,7 +18,7 @@ STATIC_LIB=$(patsubst %,lib%.a,$(LIB_NAME))
 
 
 CC=clang++
-CFLAGS= -Wall -D_REENTRANT -D_GNU_SOURCE -fPIC
+CFLAGS= -std=c++11 -Wall -D_REENTRANT -D_GNU_SOURCE -fPIC
 #CFLAGS += -std=c++11
 #INC= -I${THRIFT_DIR} -I${BOOST_DIR}  -I. -I../public 
 INC= -I. -I../framework -I..

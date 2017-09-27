@@ -5,7 +5,7 @@
  */
 
 #pragma once
-
+#include <cstdlib>
 #include <new>
 
 namespace framework

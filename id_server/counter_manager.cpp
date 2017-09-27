@@ -20,7 +20,7 @@ std::string&  get_counter_key(std::string& data , const char* rule_name,const ch
 
 Counter::Counter()
 {
-    m_timer.set_owner(this) ;
+    m_timer.set_callback(this,&Counter::async_save) ;
 }
 
 Counter::~Counter()

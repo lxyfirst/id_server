@@ -47,7 +47,7 @@ int IdServer::on_init()
 
 
     node = root.child("listen") ;
-    if(m_client_handler.init(&reactor(),node.attribute("host").value(),
+    if(m_client_handler.init(reactor(),node.attribute("host").value(),
             node.attribute("port").as_int())!=0 )
     {
         error_return(-1,"init udp failed");
@@ -210,6 +210,5 @@ void IdServer::create_format_id(string& new_id,const string& format,Counter* cou
 
 }
 
-IMPLEMENT_APPLICATION_INSTANCE(IdServer) ;
-IMPLEMENT_MAIN() ;
+IMPLEMENT_MAIN(get_app()) ;
 

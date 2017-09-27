@@ -23,9 +23,9 @@ udp_data_handler::~udp_data_handler()
     fini() ;
 }
 
-int udp_data_handler::init(base_reactor* reactor,const char* host,int port)
+int udp_data_handler::init(base_reactor& reactor,const char* host,int port)
 {
-    if(m_fd >= 0 || reactor == NULL || host == NULL ) return -1 ;
+    if(m_fd >= 0 || host == NULL ) return -1 ;
     sa_in_t service_addr ;
     init_sa_in(&service_addr,host,port) ;
     int sfd = create_udp_service(&service_addr) ;
@@ -34,13 +34,13 @@ int udp_data_handler::init(base_reactor* reactor,const char* host,int port)
     set_socket_option(sfd,SO_RCVBUF,MAX_BUF_SIZE * 1024) ;
     set_socket_option(sfd,SO_SNDBUF,MAX_BUF_SIZE * 1024) ;
 
-    if( reactor->add_handler(sfd, this, base_reactor::EVENT_READ)!=0 )
+    if( reactor.add_handler(sfd, this, base_reactor::EVENT_READ)!=0 )
     {
         close(sfd) ;
         return -3 ;
     }
 
-    m_reactor = reactor ;
+    m_reactor = &reactor ;
     m_fd = sfd ;
 
     return 0 ;

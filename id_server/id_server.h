@@ -79,5 +79,4 @@ private:
 
 };
 
-DECLARE_APPLICATION_INSTANCE(IdServer) ;
-
+inline IdServer& get_app() { return framework::singleton<IdServer>() ; };

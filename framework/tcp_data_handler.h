@@ -79,17 +79,17 @@ public:
      * @param [in] remote port to connect
      * @return 0 on sucess , nagtive value on failure
      */
-    int init(base_reactor* reactor,const char* host,int port) ;
+    int init(base_reactor& reactor,const char* host,int port) ;
     /*
      * @brief initialize connection ,for passive connection
      * @param [in] event-driven engine which monitor read/write events
      * @param [in] fd for monitor
      * @return 0 on sucess , nagtive value on failure
      */
-    int init(base_reactor* reactor,int fd ) ;
+    int init(base_reactor& reactor,int fd ) ;
 
     void detach_reactor() ;
-    int attach_reactor(base_reactor* reactor) ;
+    int attach_reactor(base_reactor& reactor) ;
 
     /*
      * @brief clear connection and buffer

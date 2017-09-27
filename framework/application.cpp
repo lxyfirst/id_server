@@ -24,8 +24,8 @@ application::application():
         m_sig_status(STATUS_STOP),
         m_status(STATUS_STOP)
 {
-    m_timer.set_owner(this) ;
-    m_delay_timer.set_owner(this) ;
+    m_timer.set_callback(this,&application::on_timeout) ;
+    m_delay_timer.set_callback(this,&application::on_delay_timeout) ;
 }
 
 
@@ -188,10 +188,15 @@ void application::change_work_directory(const char* argv0)
 
 }
 
+int application::on_parse_args(int argc,char** argv)
+{
+    return parse_option(argc,argv) ;
+}
+
 
 int application::start(int argc,char** argv)
 {
-    if(parse_option(argc,argv)!= 0 ) error_return(-1,"parse_option failed") ;
+    if(on_parse_args(argc,argv)!= 0 ) error_return(-1,"parse_option failed") ;
 
     change_work_directory(argv[0]) ;
     
@@ -242,7 +247,7 @@ int application::start(int argc,char** argv)
                 del_timer(&m_timer);
                 on_delay_stop() ;
                 //cannot add delay timer , stop directly
-                if(!add_timer_after(&m_delay_timer,m_delay_ms) ) set_status(STATUS_STOP) ;
+                if(add_timer_after(&m_delay_timer,m_delay_ms)!=0 ) set_status(STATUS_STOP) ;
 
             }
         }

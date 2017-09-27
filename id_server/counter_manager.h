@@ -64,7 +64,7 @@ private:
     Counter& operator=(const Counter& c) ;
 
 private:
-    framework::template_timer<Counter,&Counter::async_save> m_timer ;
+    framework::base_timer m_timer ;
     CounterData m_data ;
 
 };

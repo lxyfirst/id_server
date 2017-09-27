@@ -83,6 +83,12 @@ protected:
 
 
     /**
+     * @brief called  when parse args , call parse_option() default
+     * @return 0 on success , if failed ,application will exit
+     */
+    virtual int on_parse_args(int argc,char** argv) ;
+
+    /**
      * @brief called  when initialized , implemented derived class
      * @return 0 on success , if failed ,application will exit
      */
@@ -160,26 +166,24 @@ private:
     int8_t m_sig_status ;
     volatile int8_t m_status ;
 
-    template_timer<application,&application::on_timeout> m_timer ;
-    template_timer<application,&application::on_delay_timeout> m_delay_timer ;
+    base_timer m_timer ;
+    base_timer m_delay_timer ;
 
 
 };
 
-
+template<typename T> T& singleton()
+{
+    static T app ;
+    return app ;
+}
 
 
 }
 
-#define DECLARE_APPLICATION_INSTANCE(app_type)   \
-    app_type& get_app() ;
-#define IMPLEMENT_APPLICATION_INSTANCE(app_type) \
-    app_type& get_app(){ static app_type app ; return app ; }
-
-#define IMPLEMENT_MAIN()      \
-    void sig_handler(int signo){get_app().send_signal(signo);}      \
+#define IMPLEMENT_MAIN(app_instance)      \
+    static void sig_handler(int signo){app_instance.send_signal(signo);}      \
     int main(int argc,char** argv){                 \
-        get_app() ;                                 \
         signal(SIGINT,sig_handler) ;               \
         signal(SIGTERM,sig_handler) ;              \
         signal(SIGQUIT,sig_handler) ;              \
@@ -188,5 +192,5 @@ private:
         signal(SIGPIPE, SIG_IGN);         \
         signal(SIGALRM,SIG_IGN);          \
         signal(SIGHUP,SIG_IGN);           \
-        return get_app().start(argc,argv);}
+        return app_instance.start(argc,argv);}
 

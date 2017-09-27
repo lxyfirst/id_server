@@ -26,9 +26,9 @@ fsm_manager::~fsm_manager()
 
 void fsm_manager::clear()
 {
-    for(fsm_container::iterator it = m_container.begin();it!=m_container.end();++it)
+    for(auto& pair: m_container)
     {
-        free_fsm(it->second) ;
+        free_fsm(pair.second) ;
     }
 
     m_container.clear() ;

@@ -55,16 +55,16 @@ public:
 
     void clear()
     {
-        for(typename free_container::iterator it=m_free_container.begin();it!=m_free_container.end();++it)
+        for(auto& item :m_free_container)
         {
-            delete *it ;
+            delete item ;
         }
 
         m_free_container.clear() ;
 
-        for(iterator it=m_object_container.begin();it!=m_object_container.end();++it)
+        for(auto& item :m_object_container)
         {
-            delete *it ;
+            delete item ;
         }
 
         m_object_container.clear() ;

@@ -46,6 +46,7 @@ void md5_final(unsigned char result[16], md5_context *ctx);
 
 void md5(std::string& digest,const void *data, int size);
 
+int hash(const char* str,int size) ;
 
 int sql_escape_string(char* buf,int size,const char* data,int data_size) ;
 
