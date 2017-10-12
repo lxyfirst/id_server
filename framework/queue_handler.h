@@ -9,6 +9,8 @@
 #include <unistd.h>
 
 #include <functional>
+#include <mutex>
+
 #include "io_handler.h"
 #include "base_reactor.h"
 #include "circular_queue.h"
@@ -60,7 +62,12 @@ public:
 
     int send(T* msg) 
     {
-        if( m_queue.push(msg) !=0 ) return -1;
+        m_lock.lock() ;
+        int ret = m_queue.push(msg);
+        m_lock.unlock() ;
+
+        if(ret !=0) return -1 ;
+
         int64_t v =1;
         write(m_event_fd,(char*)&v,sizeof(v)) ;
         return 0 ;
@@ -80,6 +87,7 @@ protected:
     void on_write(int fd) {};
     void on_error(int fd) {};
 private:
+    std::mutex m_lock ;
     circular_queue<T*> m_queue ;
     callback_type m_callback ;
     base_reactor* m_reactor ;

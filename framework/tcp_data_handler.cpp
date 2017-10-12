@@ -90,7 +90,6 @@ int tcp_data_handler::init(base_reactor& reactor,int fd)
 int tcp_data_handler::attach_reactor(base_reactor& reactor)
 {
     if( m_reactor!= NULL  ) return -1 ;
-    
     if(reactor.add_handler(m_id.fd,this,base_reactor::EVENT_READ|base_reactor::EVENT_WRITE)!=0)
     {
         return -2 ;
