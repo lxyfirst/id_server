@@ -4,7 +4,6 @@
  *      Author: lixingyi (lxyfirst@163.com)
  */
 
-#include "pugixml/pugixml.hpp"
 #include "framework/system_util.h"
 #include "framework/mmap_file.h"
 #include "framework/time_util.h"
@@ -25,54 +24,83 @@ IdServer::~IdServer()
 {
 }
 
+int IdServer::load_config(Json::Value& config)
+{
+    mmap_file mfile ;
+    if(mfile.load_file(config_file())!=0 ) return -1 ;
+    const char* begin = (const char*)mfile.file_data() ;
+    if(!json_decode(config,begin,mfile.file_size()) ) error_return(-1,"decode json failed");
+    static const JsonFieldInfo config_field_list{
+        {"log_prefix",Json::stringValue},
+        {"log_level",Json::intValue },
+        {"service_host",Json::stringValue },
+        {"service_port",Json::intValue },
+        {"id_step",Json::intValue },
+        {"id_offset",Json::intValue },
+        {"database",Json::objectValue},
+        {"rules",Json::arrayValue},
+    } ;
+
+    if(!json_check_field(config,config_field_list)) error_return(-1,"missing some fields") ;
+
+    return 0 ;
+}
+
+int IdServer::init_logger(const Json::Value& config)
+{
+
+    const char* log_prefix = config["log_prefix"].asCString() ;
+    int log_level = config["log_level"].asInt() ;
+    if(m_logger.init(log_prefix,log_level)!=0)  return -1 ;
+    return m_log_thread.init(log_prefix,log_level) ;
+
+}
+
+int IdServer::load_rules(const Json::Value& rules_config)
+{
+    for(const auto& rule : rules_config)
+    {
+        std::string name = json_get_value(rule,"name","") ;
+        std::string lua_file = json_get_value(rule,"lua_file","") ;
+        int batch_save = json_get_value(rule,"batch_save",0) ;
+        if(m_rule_manager.load_rule_config(name,lua_file,batch_save)!=0)  error_return(-1,"load rules failed");
+    }
+
+    return 0 ;
+
+}
+
 
 int IdServer::on_init()
 {
 
-    pugi::xml_document xml_config ;
-    if(!xml_config.load_file(config_file()))
-    {
-        error_return(-1,"load config failed") ;
-    }
-    pugi::xml_node root = xml_config.child("root") ;
-    if(!root) error_return(-1,"missing <root> node") ;
+    Json::Value config ;
+    if(load_config(config)!=0) error_return(-1,"load config failed") ;
+    if(init_logger(config)!=0) error_return(-1,"init logger failed") ;
 
-    pugi::xml_node node = root.child("log") ;
-    if(m_logger.init(node.attribute("prefix").value(),node.attribute("level").as_int() ) !=0 )
-    {
-        error_return(-1,"init logger failed") ;
-    }
-    
-    m_log_thread.init(m_logger.get_prefix(),m_logger.get_level()) ;
+    if(m_log_thread.start() !=0) error_return(-1,"init log thread failed") ;
 
-
-    node = root.child("listen") ;
-    if(m_client_handler.init(reactor(),node.attribute("host").value(),
-            node.attribute("port").as_int())!=0 )
+    if(m_client_handler.init(reactor(),json_get_value(config,"service_host","0.0.0.0"),
+            json_get_value(config,"service_port",1200) )!=0 )
     {
         error_return(-1,"init udp failed");
     }
 
-    node = root.child("rules") ;
-    int offset = node.attribute("offset").as_int() ;
-    int step = node.attribute("step").as_int() ;
+    int step = json_get_value(config,"id_step",0);
+    int offset = json_get_value(config,"id_offset",0);
+    if( offset < 0 || offset >= step ) error_return(-1,"invalid id_step or id_offset") ;
+    if( m_rule_manager.init(offset,step)!=0) error_return(-1,"init rules failed");
+    if( load_rules(config["rules"]) !=0) error_return(-1,"load rules failed") ;
 
-    if( m_rule_manager.init(offset,step)!=0) error_return(-1,"load rules failed");
-    for (pugi::xml_node rule = node.first_child(); rule;rule = rule.next_sibling())
-    {
-        if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
-    }
-
-
-
-    node = root.child("database") ;
+    const Json::Value& database = config["database"] ;
     ThreadConfig thread_config ;
-    thread_config.host = node.attribute("host").value() ;
-    thread_config.port = node.attribute("port").as_int();
-    thread_config.user = node.attribute("user").value();
-    thread_config.password = node.attribute("password").value();
-    thread_config.dbname = node.attribute("dbname").value();
-    thread_config.queue_size= node.attribute("queue_size").as_int();
+    thread_config.host = database["host"].asString() ;
+    thread_config.port = database["port"].asInt();
+    thread_config.user = database["user"].asString() ;
+    thread_config.password = database["password"].asString() ;
+    thread_config.dbname = database["dbname"].asString() ;
+    thread_config.charset= database["charset"].asString() ;
+    thread_config.queue_size= json_get_value(config,"queue_size",100000);
     if(thread_config.queue_size < 10 || thread_config.queue_size > 1000000) 
     {
         error_return(-1,"invalid queue_size, should between (10,1000000)") ;
@@ -83,9 +111,8 @@ int IdServer::on_init()
         error_return(-1,"load counter failed") ;
     }
 
-    if(m_log_thread.start() !=0) error_return(-1,"init log thread failed") ;
 
-    int thread_count = node.attribute("thread_count").as_int() ;
+    int thread_count = json_get_value(config,"thread_count",4) ;
     if(m_thread_manager.init(thread_count,thread_config,m_log_thread)!=0)
     {
         error_return(-1,"init thread failed") ;
@@ -99,28 +126,18 @@ int IdServer::on_init()
 
 int IdServer::on_reload()
 {
-    pugi::xml_document xml_config ;
-    if(!xml_config.load_file(config_file()))
+
+    Json::Value config ;
+    if(load_config(config)!=0)
     {
-        error_return(-1,"load config failed") ;
+        error_log_string(m_logger,"load config failed") ;
+        return -1 ;
     }
-    pugi::xml_node root = xml_config.child("root") ;
-    if(!root) error_return(-1,"missing <root> node") ;
 
     m_logger.fini() ;
-    pugi::xml_node node = root.child("log") ;
-    if(m_logger.init(node.attribute("prefix").value(),node.attribute("level").as_int() ) !=0 )
-    {
-        error_return(-1,"init logger failed") ;
-    }
+    init_logger(config)  ;
 
-    m_log_thread.init(node.attribute("prefix").value(),node.attribute("level").as_int()) ;
-
-    node = root.child("rules") ;
-    for (pugi::xml_node rule = node.first_child(); rule;rule = rule.next_sibling())
-    {
-        if(m_rule_manager.load_rule_config(rule)!=0)  error_return(-1,"load rules failed");
-    }
+    if(load_rules(config["rules"])!=0) error_log_string(m_logger,"load rules failed") ;
 
     info_log_string(m_logger,"system reload success") ;
     return 0 ;

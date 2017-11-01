@@ -7,6 +7,7 @@
 
 #include <string>
 #include "framework/udp_data_handler.h"
+#include "jsoncpp/json_value.h"
 
 using std::string ;
 using framework::sa_in_t ;
@@ -19,17 +20,17 @@ public:
 
     int process_packet(const framework::udp_packet* p);
 
-    int send_response(const sa_in_t& to_addr,int code,const char* message,const char* seq="",const char* data="");
+    int send_response(const sa_in_t& to_addr,Json::Value& response,int code =0,const char* message = NULL);
 protected:
     /**
      * @brief process create id request
      */
-    int process_action_create(const string& rule_name,const string& app_name,const string& seq,const string& salt,const sa_in_t& from_addr);
+    int process_action_create(Json::Value& request,const sa_in_t& from_addr);
 
     /**
      * @brief process monitor request
      */
-    int process_action_monitor(const string& rule_name,const string& app_name,const string& seq,const sa_in_t& from_addr);
+    int process_action_monitor(Json::Value& request,const sa_in_t& from_addr);
 
 };
 

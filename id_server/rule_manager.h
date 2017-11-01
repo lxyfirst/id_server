@@ -10,10 +10,6 @@
 #include <string>
 #include <tr1/memory>
 #include <tr1/unordered_map>
-
-
-#include "pugixml/pugixml.hpp"
-
 #include "lua_manager.h"
 
 struct RuleConfig
@@ -43,7 +39,7 @@ public:
     ~RuleManager() ;
 
 
-    int load_rule_config(pugi::xml_node& rule) ;
+    int load_rule_config(const std::string& name,const std::string& lua_file,int batch_save) ;
 
     bool have_rule(const std::string& rule_name) const
     {

@@ -147,8 +147,15 @@ int log_thread::write_format(int ll,const char* fmt,...)
     int length = vsnprintf(buf,WRITABLE_SIZE,fmt,ap) ;
     va_end(ap);
 
-    if(length < 0 ) return -2 ;
-    else if ( length >= WRITABLE_SIZE ) length = WRITABLE_SIZE -1 ;
+    if(length < 0 ) 
+    {
+        delete[] buf ;
+        return -2 ;
+    }
+    else if ( length >= WRITABLE_SIZE ) 
+    {
+        length = WRITABLE_SIZE -1 ;
+    }
 
     if( buf[length-1] !='\n')
     {

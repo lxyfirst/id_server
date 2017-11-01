@@ -13,6 +13,10 @@
 #include "timer_manager.h"
 #include "time_util.h"
 
+#ifndef APP_VERSION
+#define APP_VERSION "unknown"
+#endif
+
 namespace framework
 {
 
@@ -79,7 +83,7 @@ protected:
     /**
      * @brief get version string , implemented derived class
      */
-    virtual const char* version() { return "1.0" ; } ;
+    virtual const char* version() { return "version " APP_VERSION " compiled at " __TIME__ " "  __DATE__ ; } ;
 
 
     /**

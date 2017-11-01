@@ -27,7 +27,7 @@ typedef struct ::sockaddr_un sa_un_t ;
  *@param [in] port
  */
 void init_sa_in(sa_in_t* addr,const char* ip,int port) ;
-int compare_sa_in(sa_in_t* addr1,sa_in_t* addr2);
+bool equal_sa_in(const sa_in_t* addr1,const sa_in_t* addr2);
 void init_sa_un(sa_un_t* addr,const char* sockfile) ;
 
 const char* addr2str(char* dst,int dst_size,const sa_in_t* addr) ;

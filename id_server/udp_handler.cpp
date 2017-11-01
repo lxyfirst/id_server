@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string>
 
-#include "jsoncpp/json.h"
+#include "jsoncpp/json_util.h"
 #include "udp_handler.h"
 
 #include "id_server.h"
@@ -24,96 +24,94 @@ UdpHandler::~UdpHandler()
 }
 
 
-int UdpHandler::send_response(const sa_in_t& to_addr,int code,const char* message,const char* seq,const char* data)
-{
-    char buffer[256] ;
-
-    int len = snprintf(buffer,sizeof(buffer),
-            "{\"code\":%d,\"message\":\"%s\",\"seq\":\"%s\",\"data\":\"%s\"}",
-            code , message ,seq,data );
-
-    return this->send(&to_addr,buffer,len) ;
-}
 
 int UdpHandler::process_packet(const udp_packet* pi)
 {
 
     debug_log_format(get_app().logger(),"recv:%s",pi->data) ;
-    if(pi->data[0] != '{') return 0 ;
+    if(pi->data[0] != '{') return -1 ;
     
-    Json::Reader reader ;
     Json::Value request ;
-    if(! reader.parse(pi->data,pi->data + pi->data_size,request,false) )
-    {
-        return 0 ;
-    }
+    if(!json_decode(request,pi->data,pi->data_size)) return -1 ;
 
-    //request : {action,app_name,rule_name,salt}
-    if(!request.isObject()) return send_response(pi->addr,-1,"invalid request") ;
+    static const JsonFieldInfo request_field_list{
+        {"action",Json::stringValue},
+        {"app_name",Json::stringValue },
+        {"rule_name",Json::stringValue },
+    } ;
 
-    if(!request["app_name"].isString()) return send_response(pi->addr,-1,"need app_name") ;
+    if(!json_check_field(request,request_field_list)) return -1 ;
 
-    if(!request["rule_name"].isString()) return send_response(pi->addr,-1,"need rule_name");
-
-    if(!request["action"].isString()) return send_response(pi->addr,-1,"need action");
-
-    string action = request["action"].asString() ;
-    string app_name = request["app_name"].asString() ;
-    string rule_name = request["rule_name"].asString() ;
-    string seq = request["seq"].isString() ? request["seq"].asString() : "" ;
+    string action = json_get_value(request,"action","") ;
 
     if(action.compare("get")==0 || action.compare("create")==0)
     {
-        std::string salt ;
-        if(request["salt"].isString() ) salt = request["salt"].asString();
-
-        return process_action_create(rule_name,app_name,seq,salt,pi->addr);
+        std::string salt = json_get_value(request,"salt","") ;
+        return process_action_create(request,pi->addr);
 
     }
     else
     {
-        return process_action_monitor(rule_name,app_name,seq,pi->addr) ;
+        return process_action_monitor(request,pi->addr) ;
     }
 
 
 }
 
-int UdpHandler::process_action_create(const string& rule_name,const string& app_name,const string& seq,const string& salt,const sa_in_t& from_addr)
+int UdpHandler::process_action_create(Json::Value& request,const sa_in_t& from_addr)
 {
-    std::string new_id ;
+    string app_name = json_get_value(request,"app_name","") ;
+    string rule_name = json_get_value(request,"rule_name","") ;
+    string salt = json_get_value(request,"salt","") ;
 
+    std::string new_id ;
     if( get_app().create_id(new_id,rule_name,app_name,salt)== 0 && (new_id.size() > 0) )
     {
-        send_response(from_addr,0,"success",seq.c_str(),new_id.c_str()) ;
+        trace_log_format(get_app().logger(),"create_id rule_name:%s app_name:%s salt:%s id:%s",
+            rule_name.c_str(),app_name.c_str(),salt.c_str(),new_id.c_str() );
+
+        request["data"] = new_id ;
+        return send_response(from_addr,request) ;
     }
     else
     {
-        send_response(from_addr,-1,"system error",seq.c_str()) ;
+        return send_response(from_addr,request,-1,"system error") ;
+        
     }
 
-    trace_log_format(get_app().logger(),"create_id rule_name:%s app_name:%s salt:%s id:%s",
-            rule_name.c_str(),app_name.c_str(),salt.c_str(),new_id.c_str() );
 
-    return 0 ;
 }
 
-int UdpHandler::process_action_monitor(const string& rule_name,const string& app_name,const string& seq,const sa_in_t& from_addr)
+int UdpHandler::process_action_monitor(Json::Value& request,const sa_in_t& from_addr)
 {
+    string app_name = json_get_value(request,"app_name","") ;
+    string rule_name = json_get_value(request,"rule_name","") ;
+
     Counter* counter = get_app().get_counter(rule_name,app_name) ;
     if(counter == NULL )
     {
-        send_response(from_addr,-1,"not exist",seq.c_str()) ;
+        return send_response(from_addr,request,-1,"not exist") ;
     }
     else
     {
-        char buffer[256] = {0} ;
-        int len = snprintf(buffer,sizeof(buffer),
-                "{\"code\":0,\"message\":\"ok\",\"message\":\"%s\",\"data\":{\"counter\":%d,\"node_offset\":%d}}",
-                    seq.c_str(),counter->data().counter , counter->data().node_offset);
-
-            return this->send(&from_addr,buffer,len) ;
+        Json::Value data(Json::objectValue) ;
+        data["counter"] = counter->data().counter ;
+        data["node_offset"] = counter->data().node_offset;
+        request["data"] = data ;
+        return send_response(from_addr,request) ;
     }
 
-    return 0 ;
+    return -1 ;
+
+}
+
+int UdpHandler::send_response(const sa_in_t& to_addr,Json::Value& response,int code,const char* message)
+{
+    response["code"] = code ;
+    if(message !=NULL) response["message"] = message ;
+
+    std::string buffer ;
+    json_encode(buffer,response) ;
+    return this->send(&to_addr,buffer.data(),buffer.size() ) ;
 }
 

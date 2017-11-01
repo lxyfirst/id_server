@@ -18,7 +18,7 @@ int load_counter_data(CounterManager& counter_manager,int node_offset,const Thre
 {
     MysqlConnection db ;
     db.init(config.host.c_str(),config.user.c_str(),config.password.c_str(), config.port ) ;
-
+    db.set_charset(config.charset.c_str()) ;
     db.use(config.dbname.c_str());
 
     if(db.exec_format("select rule_name,app_name,counter,update_time from counter where node_offset=%d",

@@ -1,0 +1,19 @@
+{
+    "log_prefix" : "id_server" , 
+    "log_level" :3 ,
+
+    "service_host" : "127.0.0.1",
+    "service_port" : 1200 ,
+    "thread_count" : 4 ,
+    "queue_size" : 100000 ,
+    "id_step" : 2 ,
+    "id_offset" : 0 ,
+
+    "database": {"host":"dev51","port":3306,"user":"dev","password":"dev","charset":"utf8","dbname":"id_counter" }, 
+
+    "rules" : [
+        {"name": "task" , "lua_file":"task.lua", "batch_save":100 }
+    ]
+
+}
+

@@ -16,6 +16,7 @@
 #include "framework/application.h"
 #include "framework/day_roll_logger.h"
 #include "framework/log_thread.h"
+#include "jsoncpp/json_util.h"
 
 #include "data_thread_manager.h"
 
@@ -63,6 +64,10 @@ protected:
 
     void on_timer() ;
 
+    int load_config(Json::Value& config);
+
+    int init_logger(const Json::Value& config);
+    int load_rules(const Json::Value& config);
 
 
 private:

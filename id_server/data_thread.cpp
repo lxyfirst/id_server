@@ -61,7 +61,7 @@ void DataThread::on_timeout()
 
         m_db.init(m_config.host.c_str(), m_config.user.c_str(),
                 m_config.password.c_str(), m_config.port ) ;
-
+        m_db.set_charset(m_config.charset.c_str()) ;
         m_db.use(m_config.dbname.c_str());
     }
 }

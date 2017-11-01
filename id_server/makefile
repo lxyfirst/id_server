@@ -1,6 +1,5 @@
 
 SRCS=$(wildcard *.cpp)
-#BIN_SRCS=$(shell grep "int main" -l *.cpp) 
 BIN_SRCS=$(shell grep "IMPLEMENT_MAIN" -l *.cpp) 
 LIB_SRCS=$(patsubst $(BIN_SRCS),,$(SRCS))
 
@@ -9,27 +8,23 @@ OBJS=$(SRCS:.cpp=.o)
 
 LIB_OBJS=$(patsubst %.cpp,%.o,$(LIB_SRCS)) 
 BINS=$(patsubst %.cpp,%.bin,$(BIN_SRCS))
-#BINS=test_server
-DEP_LIBS=  ../framework/libframework.a  ../pugixml/libpugixml.a ../jsoncpp/libjsoncpp.a
+DEP_LIBS=  ../framework/libframework.a ../jsoncpp/libjsoncpp.a
 
 LIB_NAME=
 SO_LIB=$(patsubst %,lib%.so,$(LIB_NAME))
 STATIC_LIB=$(patsubst %,lib%.a,$(LIB_NAME))
 
+APP_VERSION=$(shell git show --format="%H" --quiet)
 
 CC=clang++
-CFLAGS= -std=c++11 -Wall -D_REENTRANT -D_GNU_SOURCE -fPIC
-#CFLAGS += -std=c++11
-#INC= -I${THRIFT_DIR} -I${BOOST_DIR}  -I. -I../public 
+CFLAGS= -std=c++11 -Wall -D_REENTRANT -D_GNU_SOURCE -fPIC -DAPP_VERSION=\"$(APP_VERSION)\"
 INC= -I. -I../framework -I..
-LDFLAGS=-llua -lrt -lpthread -lmysqlclient_r -L/usr/lib64/mysql
+LDFLAGS=-llua -lrt -lpthread -lmysqlclient -L/usr/lib64/mysql -ltcmalloc
 
 ifeq ($(release), 1)
 CFLAGS += -O2 -DNDEBUG 
-LDFLAGS += -ltcmalloc_minimal
 else
 CFLAGS += -g -DDEBUG 
-LDFLAGS += -ltcmalloc_and_profiler
 endif
 
 all: $(BINS) $(SO_LIB) $(STATIC_LIB) 
@@ -48,7 +43,7 @@ release: clean
 	@make release=1
 
 deploy: 
-	tar -zcf deploy.tar.gz  *.xml *.lua *.sh $(BINS)
+	tar -zcf deploy.tar.gz  *.json *.lua *.sh $(BINS)
 
 %.d : %.cpp
 	$(CC) $(CFLAGS)  -MT $(subst .cpp,.o,$<) -MM $(INC)  $< >$@

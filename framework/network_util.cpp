@@ -34,16 +34,16 @@ void init_sa_in(sa_in_t* addr,const char* ip,int port)
     addr->sin_addr.s_addr = inet_addr(ip) ;
 }
 
-int compare_sa_in(sa_in_t* addr1,sa_in_t* addr2)
+bool equal_sa_in(const sa_in_t* addr1,const sa_in_t* addr2)
 {
     if (addr1->sin_port == addr2->sin_port && 
         addr1->sin_addr.s_addr == addr2->sin_addr.s_addr ) 
     {
-        return 0 ;
+        return true ;
     }
         
 
-    return -1 ;
+    return false ;
 }
 
 

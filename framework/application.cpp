@@ -174,6 +174,7 @@ void application::change_work_directory(const char* argv0)
 {
 
     if(m_work_path) chdir(m_work_path) ;
+    /*
     else
     {
         char* cmd = strdup(argv0) ;
@@ -184,6 +185,7 @@ void application::change_work_directory(const char* argv0)
         }
 
     }
+    */
 
 
 }
@@ -224,7 +226,7 @@ int application::start(int argc,char** argv)
 
     m_status = STATUS_RUN ;
     m_sig_status = STATUS_RUN ;
-    printf("system started\n") ;
+    //printf("system started\n") ;
     
     on_timeout(&m_timer_engine) ;
     while(1)
@@ -259,7 +261,7 @@ int application::start(int argc,char** argv)
     }
 
     on_fini() ;
-    printf("system stopped\n") ;
+    //printf("system stopped\n") ;
 
     return 0 ;
 }
