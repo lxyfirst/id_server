@@ -5,7 +5,7 @@
     客户端可以使用集群中任意选择一个服务器节点发起请求，失败则重试下一个。
 
 ### 系统实现 
-    使用c++实现，运行在linux下,依赖mysqlclient库、lua库和gperftools库，
+    使用c++实现，运行在linux下,依赖mysqlclient库、lua库和tcmalloc库，
     采用多线程异步模型，主线程处理请求，数据库线程组负责异步写数据库。
     主线程和数据库线程采用eventfd + lockfree queue方式通信。
     数据的持久化存储采用批量+预保存模式，减少数据库压力，保障数据落地的可靠性。
@@ -26,27 +26,29 @@
     说明  min : 最小耗时(秒) max : 最大耗时(秒) avg : 平均耗时(秒)
     服务器TPS达到1万/秒时，平均延迟在0.3毫秒。
 
-### 配置项 
-    日志配置 
-    <log prefix="id_server" level="5" />
+### 配置项   
+```
+{
+    "log_prefix" : "id_server" ,    //日志文件前缀
+    "log_level" :3 ,                //日志级别
 
-    服务端口配置
-    <listen host="0.0.0.0" port="1200" />
+    "service_host" : "127.0.0.1",   //服务IP
+    "service_port" : 1200 ,         //服务端口
+    "thread_count" : 4 ,            //数据库线程
+    "queue_size" : 100000 ,         //线程队列
+    "id_step" : 2 ,                 // ID自增的步长，也可以理解为同时运行的服务器数量
+    "id_offset" : 0 ,               // ID自增的偏移量，也可以理解为每个服务器的ID，从0开始，不能超过step
 
-    数据库线程配置 
-    thread_count表示数据库线程数量，根据app_name分发。
-    queue_size表示每个线程消息队列容量。
-    <database thread_count="4" queue_size="100000" host="127.0.0.1" port="3306" 
-        user="root" password="" dbname="id_counter" /> 
+    "database": {"host":"localhost","port":3306,"user":"dev","password":"dev","charset":"utf8","dbname":"id_counter" }, 
 
-    ID规则配置，规则内容由lua脚本定义，修改配置后reload即可。 
-    step表示ID自增的步长，也可以理解为同时运行的服务器数量 。 
-    offset表示ID自增的偏移量，也可以理解为每个服务器的ID，从0开始，不能超过step,每个服务器不能重复 。
-    name表示规则名,对应请求中的rule_name 。
-    batch_save表示批量预更新counter的数量，可以理解为每batch_save次更新持久化一次。
-    <rules step="2"  offset="1" >
-        <rule name="task" lua_file="task.lua" batch_save="10" />
-    </rules>
+    "rules" : [
+        {"name": "order_id" , "lua_file":"order_id.lua", "batch_save":100 } , //batch_save表示批量预更新counter的数量
+        {"name": "task" , "lua_file":"task.lua", "batch_save":100 }
+    ]
+
+}
+```
+    
 
 ### ID规则定义 
     具体规则有lua脚本定义，修改脚本后需要reload生效，需要实现4个函数
