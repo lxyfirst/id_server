@@ -12,6 +12,7 @@
     "database": {"host":"dev51","port":3306,"user":"dev","password":"dev","charset":"utf8","dbname":"id_counter" }, 
 
     "rules" : [
+        {"name": "order_id" , "lua_file":"order_id.lua", "batch_save":100 } ,
         {"name": "task" , "lua_file":"task.lua", "batch_save":100 }
     ]
 
